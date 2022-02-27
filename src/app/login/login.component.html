@@ -1,13 +1,13 @@
 <div class="mat-app-background main">
-  <mat-card class="mat-card">
+  <mat-card class="mat-card mat-elevation-z8">
     <mat-card-title style="text-align: center">Login</mat-card-title>
     <mat-card-content>
       <form [formGroup]="formGroup" class="uploadForm">
 
         <mat-form-field appearance="fill">
-          <mat-label>Username</mat-label>
-          <input matInput [formControl]="username" required>
-          <mat-error *ngIf="username.invalid">Username is required!</mat-error>
+          <mat-label>Email</mat-label>
+          <input matInput [formControl]="email" required>
+          <mat-error *ngIf="email.invalid">Username is required!</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -16,9 +16,33 @@
           <mat-error *ngIf="password.invalid">Password is required!</mat-error>
         </mat-form-field>
 
+        <button [disabled]="this.formGroup.invalid" mat-raised-button
+                matRipple
+                color="accent"
+                [matRippleCentered]="false"
+                [matRippleUnbounded]="false"
+                [matRippleDisabled]="false"
+                (click)="onLogin()">
+          <div [ngSwitch]="isLoading">
+            <mat-spinner *ngSwitchCase="true"
+                         style="margin: 1px 0 1px 0"
+                         [color]="'primary'"
+                         [diameter]="35"
+                         [mode]="'indeterminate'"
+            ></mat-spinner>
+            <p style="padding: 0;margin: 0" *ngSwitchCase="false">Login</p>
+          </div>
+        </button>
+
+
       </form>
     </mat-card-content>
     <mat-divider></mat-divider>
-    <mat-card-footer>Footer</mat-card-footer>
+    <mat-card-footer>
+      <div class="footer-content">
+        <p>Don't have an account ? </p>
+        <button mat-raised-button> Register</button>
+      </div>
+    </mat-card-footer>
   </mat-card>
 </div>

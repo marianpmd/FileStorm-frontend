@@ -51,6 +51,11 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.mat-snack-bar-warn{
+  background-color: red;
+}
+
 ::-webkit-scrollbar {
   width: 4px;
   background: none;

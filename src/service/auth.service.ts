@@ -1,24 +1,25 @@
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
-import {Observable} from "rxjs";
-import {CookieService} from "ngx-cookie-service";
+import { Injectable } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../environments/environment";
+import {LoginData} from "../datamodel/LoginData";
+
+const LOGIN_URL = environment.baseUrl+'/login';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements CanActivate {
-  constructor(private cookieService:CookieService,
-              private router : Router) {
-  }
+export class AuthService {
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    let cookie = this.cookieService.get('ocl-jwt');
+  constructor(private http:HttpClient) { }
 
-    if (!cookie){
-      this.router.navigate(['login']);
-      return false;
-    }
+  onLogin(email:string,password:string){
+    let params = new FormData();
+    params.append("email",email);
+    params.append("password",password);
 
-    return true;
+    return  this.http.post<LoginData>(LOGIN_URL,params,{
+      observe : 'response'
+    });
+
   }
 }
