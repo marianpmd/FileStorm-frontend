@@ -1,0 +1,44 @@
+<div class="main">
+  <h2 style="text-align: center">Register</h2>
+  <form [formGroup]="formGroup" class="register-form">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">Email is invalid!</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input type="password" matInput [formControl]="password" required>
+      <mat-error *ngIf="password.invalid">Password is required!</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Confirm Password</mat-label>
+      <input type="password" matInput [formControl]="confirmPassword" required>
+      <mat-error *ngIf="confirmPassword.hasError('required')">Password is required!</mat-error>
+      <mat-error *ngIf="confirmPassword.hasError('matching')">Passwords do not match!</mat-error>
+    </mat-form-field>
+
+    <mat-divider></mat-divider>
+
+    <button [disabled]="this.formGroup.invalid" mat-raised-button
+            matRipple
+            color="accent"
+            [matRippleCentered]="false"
+            [matRippleUnbounded]="false"
+            [matRippleDisabled]="false"
+            (click)="onRegister()">
+      <div [ngSwitch]="isLoading">
+        <mat-spinner *ngSwitchCase="true"
+                     style="margin: 1px 0 1px 0"
+                     [color]="'primary'"
+                     [diameter]="35"
+                     [mode]="'indeterminate'"
+        ></mat-spinner>
+        <p style="padding: 0;margin: 0" *ngSwitchCase="false">Register</p>
+      </div>
+    </button>
+  </form>
+</div>

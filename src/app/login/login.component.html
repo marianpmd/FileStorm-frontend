@@ -7,7 +7,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Email</mat-label>
           <input matInput [formControl]="email" required>
-          <mat-error *ngIf="email.invalid">Username is required!</mat-error>
+          <mat-error *ngIf="email.invalid">Email is invalid!</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -41,7 +41,7 @@
     <mat-card-footer>
       <div class="footer-content">
         <p>Don't have an account ? </p>
-        <button mat-raised-button> Register</button>
+        <button mat-raised-button (click)="onRegister()"> Register</button>
       </div>
     </mat-card-footer>
   </mat-card>

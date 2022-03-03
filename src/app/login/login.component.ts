@@ -3,6 +3,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../service/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {RegisterComponent} from "../register/register.component";
 
 
 @Component({
@@ -22,6 +24,7 @@ export class LoginComponent implements OnInit {
   constructor(private auth: AuthService,
               protected snackBar: MatSnackBar,
               private router: Router,
+              private dialog : MatDialog
               ) {
   }
 
@@ -55,5 +58,11 @@ export class LoginComponent implements OnInit {
         });
 
     }
+  }
+
+  onRegister() {
+    this.dialog.open(RegisterComponent,{
+
+    })
   }
 }
