@@ -1,107 +1,53 @@
-<div class="main mat-app-background"><p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p>
-  <p>dashboard works!</p></div>
+<mat-sidenav-container class="container">
+  <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'">
+    <mat-nav-list class="nav-list">
+      <mat-list-item [disableRipple]=true>Username</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>Logout</mat-list-item>
+
+      <span class="example-spacer"></span>
+
+
+      <mat-list-item>Available Space</mat-list-item>
+
+      <mat-list-item>
+        <mat-progress-bar [value]="58.9"></mat-progress-bar>
+      </mat-list-item>
+
+      <mat-list-item style="font-size:10px">58.9GB of 100GB used</mat-list-item>
+
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content
+    infinite-scroll
+    class="infinite-container"
+    [scrollWindow]="false"
+    (scrolled)="onWindowScroll($event)">
+
+    <ngx-file-drop class="drop-area"
+                   (onFileDrop)="droppedFile($event)"
+                   (onFileOver)="fileOver($event)"
+                    [multiple] = true>
+      <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+        Optional custom content that replaces the the entire default content.
+
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+        <p>Content</p>
+
+
+      </ng-template>
+    </ngx-file-drop>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+

@@ -1,4 +1,10 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {SidenavService} from "../../service/sidenav.service";
+import {MatSidenav} from "@angular/material/sidenav";
+import {ViewportRuler} from "@angular/cdk/overlay";
+import {IInfiniteScrollEvent} from "ngx-infinite-scroll";
+import {MediaMatcher} from "@angular/cdk/layout";
+import {NgxFileDropEntry} from "ngx-file-drop";
 
 @Component({
   selector: 'app-dashboard',
@@ -7,22 +13,43 @@ import {Component, HostListener, OnInit} from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  wasTriggered : boolean = false;
+  wasTriggered: boolean = false;
+  mobileQuery!: MediaQueryList;
 
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll() {
-    if (!this.wasTriggered) {
-      // 200 is the height from bottom from where you want to trigger the infintie scroll, can we zero to detect bottom of window
-      if ((document.body.clientHeight + window.scrollY + 200) >= document.body.scrollHeight) {
-        console.log('tiggred');
-        this.wasTriggered = true;
-      }
-    }
+  @ViewChild('snav') snav!: MatSidenav;
+
+  private mobileQueryListener!: () => void;
+
+  constructor(private sidenavService: SidenavService,
+              private ruler: ViewportRuler,
+              private changeDetectorRef: ChangeDetectorRef,
+              media: MediaMatcher) {
+    this.mobileQuery = media.matchMedia('(max-width : 600px)');
+    this.mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addEventListener('', this.mobileQueryListener);
   }
 
-  constructor() { }
+  ngAfterViewInit() {
+    this.sidenavService.setSidenav(this.snav);
+    if (!this.mobileQuery.matches) {
+      this.snav.open();
+     this.changeDetectorRef.detectChanges();
+    }
+  }
 
   ngOnInit(): void {
   }
 
+  onWindowScroll($event: IInfiniteScrollEvent) {
+    console.log("TRIGGER LOAD")
+    console.log($event.currentScrollPosition)
+  }
+
+  fileOver($event: any) {
+
+  }
+
+  droppedFile($event: NgxFileDropEntry[]) {
+    console.log($event)
+  }
 }

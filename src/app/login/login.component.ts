@@ -15,6 +15,7 @@ import {RegisterComponent} from "../register/register.component";
 export class LoginComponent implements OnInit {
   email: FormControl = new FormControl('', [Validators.required, Validators.email]);
   password: FormControl = new FormControl('', [Validators.required]);
+
   formGroup: FormGroup = new FormGroup({
     username: this.email,
     password: this.password
@@ -24,8 +25,8 @@ export class LoginComponent implements OnInit {
   constructor(private auth: AuthService,
               protected snackBar: MatSnackBar,
               private router: Router,
-              private dialog : MatDialog
-              ) {
+              private dialog: MatDialog
+  ) {
   }
 
   ngOnInit(): void {
@@ -42,7 +43,7 @@ export class LoginComponent implements OnInit {
             let body = result.body;
             let token = body!.accessToken;
 
-            localStorage.setItem("ocl-jwt",token);
+            localStorage.setItem("ocl-jwt", token);
 
             this.isLoading = false;
 
@@ -61,8 +62,6 @@ export class LoginComponent implements OnInit {
   }
 
   onRegister() {
-    this.dialog.open(RegisterComponent,{
-
-    })
+    this.dialog.open(RegisterComponent, {})
   }
 }

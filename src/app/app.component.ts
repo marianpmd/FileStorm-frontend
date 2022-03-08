@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {OverlayContainer} from "@angular/cdk/overlay";
 import {CookieService} from "ngx-cookie-service";
+import {SidenavService} from "../service/sidenav.service";
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,8 @@ export class AppComponent {
 
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
-              private overlay: OverlayContainer) {
+              private overlay: OverlayContainer,
+              private sidenavService : SidenavService) {
   }
 
   ngOnInit(): void {
@@ -46,5 +48,7 @@ export class AppComponent {
     });
   }
 
-
+  toggleSidenav() {
+    this.sidenavService.toggle();
+  }
 }

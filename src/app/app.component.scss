@@ -41,17 +41,19 @@ mat-list {
 .logo{
   width: 50px;
   #logo-image {
-    width: 100%;
-    margin-top: 13px;
+    width: 90%;
+    margin-top: 5px;
   }
 }
 
 .toolbar {
+  padding-left: 10px;
   position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  padding-bottom: 7px;
 
   .dark-toggle {
     display: flex;

@@ -1,0 +1,46 @@
+.main {
+  margin-top: 40px;
+  width: 100%;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+
+  .infinite-container {
+    overflow: auto;
+  }
+}
+
+.nav-list {
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.drop-area {
+  ::ng-deep.ngx-file-drop__drop-zone {
+    border: 0;
+    border-radius: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
+
+  ::ng-deep.ngx-file-drop__content{
+    color: inherit;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    align-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

@@ -22,6 +22,11 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {RegisterComponent} from "./register/register.component";
 import {MatDialogModule} from "@angular/material/dialog";
+import {ScrollingModule} from "@angular/cdk/scrolling";
+import {InfiniteScrollModule} from "ngx-infinite-scroll";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatFileUploadModule} from "angular-material-fileupload";
+import {NgxFileDropModule} from "ngx-file-drop";
 
 
 @NgModule({
@@ -50,7 +55,13 @@ import {MatDialogModule} from "@angular/material/dialog";
     MatInputModule,
     HttpClientModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSidenavModule,
+    ScrollingModule,
+    InfiniteScrollModule,
+    MatProgressBarModule,
+    MatFileUploadModule,
+    NgxFileDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
