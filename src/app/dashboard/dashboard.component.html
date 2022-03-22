@@ -27,25 +27,283 @@
     <ngx-file-drop class="drop-area"
                    (onFileDrop)="droppedFile($event)"
                    (onFileOver)="fileOver($event)"
-                    [multiple] = true>
+                   [multiple]=true>
       <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-        Optional custom content that replaces the the entire default content.
+        <section class="files-container">
 
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
-        <p>Content</p>
+<!--          <button mat-icon-button class="add-button">-->
+<!--            <mat-icon>add_circle_outline</mat-icon>-->
+<!--          </button>-->
 
-
+<!--          <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>   <div class="file-item">-->
+<!--            <img src="assets/icons/file.svg" alt="file">-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>-->
+<!--          </div>-->
+        </section>
       </ng-template>
+
+
     </ngx-file-drop>
   </mat-sidenav-content>
 </mat-sidenav-container>

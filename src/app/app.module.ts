@@ -18,7 +18,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatRippleModule} from "@angular/material/core";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {RegisterComponent} from "./register/register.component";
 import {MatDialogModule} from "@angular/material/dialog";
@@ -27,6 +27,9 @@ import {InfiniteScrollModule} from "ngx-infinite-scroll";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatFileUploadModule} from "angular-material-fileupload";
 import {NgxFileDropModule} from "ngx-file-drop";
+import {XhrInterceptor} from "../interceptors/xhr.interceptor";
+import { FileUploadDialogComponent } from './file-upload-dialog/file-upload-dialog.component';
+import { UploadLoadingDialogComponent } from './upload-loading-dialog/upload-loading-dialog.component';
 
 
 @NgModule({
@@ -34,7 +37,9 @@ import {NgxFileDropModule} from "ngx-file-drop";
     AppComponent,
     DashboardComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    FileUploadDialogComponent,
+    UploadLoadingDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,7 +68,9 @@ import {NgxFileDropModule} from "ngx-file-drop";
     MatFileUploadModule,
     NgxFileDropModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

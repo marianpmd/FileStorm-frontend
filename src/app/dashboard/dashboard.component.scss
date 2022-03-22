@@ -32,7 +32,7 @@
     margin: 0;
   }
 
-  ::ng-deep.ngx-file-drop__content{
+  ::ng-deep.ngx-file-drop__content {
     color: inherit;
     height: 100%;
     width: 100%;
@@ -42,5 +42,53 @@
     align-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
+  }
+}
+
+.files-container {
+  margin-top: 7px;
+  margin-bottom: 7px;
+  width: 100%;
+  display: grid;
+  grid-gap: 7px;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  justify-items: center;
+
+  .file-item {
+    max-width: 140px;
+    border: 1px solid #4a4e54;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    img {
+      width: 64px;
+      height: 64px;
+    }
+
+    div {
+      max-width: 132px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      padding: 4px;
+    }
+
+    mat-divider {
+      width: 100%;
+    }
+
+  }
+}
+
+.add-button {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+
+  mat-icon {
+    transform: scale(1.5);
   }
 }

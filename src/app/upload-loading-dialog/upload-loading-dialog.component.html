@@ -1,0 +1,13 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+<div mat-card-content class="container">
+  <ng-container *ngFor="let file of allFiles | keyvalue">
+    <p class="filename">{{file.key.name}}</p>
+    <mat-progress-bar [mode]="'determinate'"
+      [value]="file.value" ></mat-progress-bar>
+    <mat-divider></mat-divider>
+
+  </ng-container>
+
+</div>

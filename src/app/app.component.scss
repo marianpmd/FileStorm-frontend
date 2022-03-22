@@ -47,13 +47,14 @@ mat-list {
 }
 
 .toolbar {
-  padding-left: 10px;
+  max-height: 55px;
+  z-index: 100;
+  margin: 0;
   position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  padding-bottom: 7px;
 
   .dark-toggle {
     display: flex;

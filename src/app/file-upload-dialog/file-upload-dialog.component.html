@@ -1,0 +1,15 @@
+<div class="main">
+  <ng-container *ngFor="let file of allFiles">
+    <p class="filename">Filename : {{file.name}}</p>
+    <mat-divider></mat-divider>
+    <p>Size : {{file.size}} bytes</p>
+    <mat-divider></mat-divider>
+  </ng-container>
+
+  <p>Are you sure you want to continue uploading?</p>
+
+  <div mat-dialog-actions>
+    <button mat-button cdkfocusinitial [mat-dialog-close]="true">Yes</button>
+    <button mat-button [mat-dialog-close]="false">No</button>
+  </div>
+</div>
