@@ -1,3 +1,6 @@
+@import "../../assets/mixins/base-colors";
+
+
 .main {
   margin-top: 40px;
   width: 100%;
@@ -43,6 +46,7 @@
     flex-direction: row;
     flex-wrap: wrap;
   }
+
 }
 
 .files-container {
@@ -56,7 +60,8 @@
 
   .file-item {
     max-width: 140px;
-    border: 1px solid #4a4e54;
+    min-width: 140px;
+    border: 1px solid $primary;
     border-radius: 6px;
     display: flex;
     justify-content: center;
@@ -64,31 +69,59 @@
     flex-direction: column;
     flex-wrap: wrap;
 
-    img {
-      width: 64px;
-      height: 64px;
+    .icon {
+      transform: scale(1.5);
+      padding: 30px;
     }
 
-    div {
+    p.filename {
       max-width: 132px;
+      color: $primary;
+      font-weight: 550;
       text-overflow: ellipsis;
+      white-space: nowrap;
       overflow: hidden;
-      padding: 4px;
+      margin: 6px 0 6px 6px;
     }
 
     mat-divider {
       width: 100%;
+      background-color: $primary;
     }
 
   }
+
+  :hover.file-item {
+    background-color: #424242;
+  }
 }
 
-.add-button {
-  position: fixed;
-  bottom: 0;
-  right: 0;
+mat-list-item.add-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 
   mat-icon {
     transform: scale(1.5);
+    width: auto;
+  }
+}
+
+.no-files-container {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .no-files-message {
+    padding: 20px;
+    font-weight: 400;
+    font-size: 18px;
   }
 }

@@ -1,10 +1,16 @@
 .container{
+  min-width: 250px;
+  max-width: 250px;
+  max-height: 105px;
 
   .filename{
     text-overflow: ellipsis;
     overflow: hidden;
+    white-space: nowrap;
   }
-
+  .done-tick{
+    color: lightgreen;
+  }
 
 }
 .close-button{

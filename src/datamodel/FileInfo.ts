@@ -1,4 +1,8 @@
 export interface FileInfo {
-  filename : string,
-  progress : number
+  id: number,
+  name: string,
+  path: string,
+  suffix: string,
+  size: number,
+  fileType: string
 }

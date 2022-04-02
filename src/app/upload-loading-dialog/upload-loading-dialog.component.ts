@@ -1,8 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NgxFileDropEntry} from "ngx-file-drop";
 import {FileService} from "../../service/file.service";
-import {HttpEventType, HttpResponse} from "@angular/common/http";
+import {HttpEventType} from "@angular/common/http";
+import {FileUploadInfo} from "../../datamodel/FileUploadInfo";
+import {UploadState} from "../../utils/UploadState";
+import {UploadStateService} from "../../service/upload-state.service";
+import {MatProgressBar, ProgressBarMode} from "@angular/material/progress-bar";
 
 @Component({
   selector: 'app-upload-loading-dialog',
@@ -11,46 +15,44 @@ import {HttpEventType, HttpResponse} from "@angular/common/http";
 })
 export class UploadLoadingDialogComponent implements OnInit {
 
-  public allFiles: Map<File, number> = new Map<File, number>();
+  progressBarMode:ProgressBarMode = 'indeterminate';
+  public allFiles: Map<File, FileUploadInfo> = new Map<File, FileUploadInfo>();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: NgxFileDropEntry[],
-    private fileService: FileService
-  ) {
-  }
+    private dialogRef : MatDialogRef<UploadLoadingDialogComponent>,
+    private fileService: FileService,
+    private uploadStateService : UploadStateService
+  ) {}
 
   ngOnInit(): void {
-
     this.data.forEach(ngxEntry => {
       let fileEntry = ngxEntry.fileEntry as FileSystemFileEntry;
       fileEntry.file(actualFile => {
         this.fileService.uploadFiles(actualFile)
           .subscribe(
             (next: any) => {
+              this.progressBarMode = 'determinate';
 
-
-              console.log("Adding filedata to dialog")
-              if (!this.allFiles.has(actualFile)){
-                this.allFiles.set(actualFile, 0);
-              }else {
+              if (!this.allFiles.has(actualFile)) {
+                this.allFiles.set(actualFile, {
+                  uploadState : UploadState.UPLOADING,
+                  progress : 0
+                });
+              } else {
                 if (next.type === HttpEventType.UploadProgress) {
                   let progress = Math.round(100 * next.loaded / next.total);
-                  this.allFiles.set(actualFile, progress);
-                  console.log(progress);
-                } else if (next.type instanceof HttpResponse) {
-                  console.log("DONE with file ", actualFile.name);
+                  this.allFiles.set(actualFile, {
+                    uploadState : UploadState.UPLOADING,
+                    progress : progress
+                  });
+                } else if (next.type === HttpEventType.Response) {
+                  let fileUploadInfo = this.allFiles.get(actualFile);
+                  fileUploadInfo!.uploadState = UploadState.DONE;
+                  console.log("response ",fileUploadInfo)
+                  this.uploadStateService.setFileInfo(next.body);
                 }
               }
-
-
-
-              // if (next.type === HttpEventType.UploadProgress){
-              //   let progress = Math.round(100 * next.loaded / next.total);
-              //   fileInfo.progress = progress;
-              //   console.log(progress);
-              // }else if (next.type instanceof HttpResponse){
-              //
-              // }
 
 
             })
@@ -60,4 +62,11 @@ export class UploadLoadingDialogComponent implements OnInit {
 
   }
 
+  isUploading(value: FileUploadInfo) {
+    return value.uploadState === UploadState.UPLOADING;
+  }
+
+  isDone(value: FileUploadInfo) {
+    return value.uploadState === UploadState.DONE;
+  }
 }

@@ -2,7 +2,7 @@
   <ng-container *ngFor="let file of allFiles">
     <p class="filename">Filename : {{file.name}}</p>
     <mat-divider></mat-divider>
-    <p>Size : {{file.size}} bytes</p>
+    <p>Size : {{computeFileSize(file.size)}}</p>
     <mat-divider></mat-divider>
   </ng-container>
 

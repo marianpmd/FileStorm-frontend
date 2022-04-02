@@ -4,7 +4,7 @@ import {environment} from "../environments/environment";
 import {LoginData} from "../datamodel/LoginData";
 import {Observable} from "rxjs";
 
-const LOGIN_URL = environment.baseUrl + '/login';
+export const LOGIN_URL = environment.baseUrl + '/login';
 const REGISTER_URL = environment.baseUrl + '/user/register';
 
 @Injectable({

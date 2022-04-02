@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/dashboard']);
           },
           error: err => {
+            console.log("Error , showing snackbar")
             this.snackBar.open("Login has failed!", "Close", {
               duration: 2000,
               panelClass: ['mat-toolbar', 'mat-warn']

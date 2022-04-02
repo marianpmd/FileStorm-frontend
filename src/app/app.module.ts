@@ -28,8 +28,12 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatFileUploadModule} from "angular-material-fileupload";
 import {NgxFileDropModule} from "ngx-file-drop";
 import {XhrInterceptor} from "../interceptors/xhr.interceptor";
-import { FileUploadDialogComponent } from './file-upload-dialog/file-upload-dialog.component';
-import { UploadLoadingDialogComponent } from './upload-loading-dialog/upload-loading-dialog.component';
+import {FileUploadDialogComponent} from './file-upload-dialog/file-upload-dialog.component';
+import {UploadLoadingDialogComponent} from './upload-loading-dialog/upload-loading-dialog.component';
+import {JWT_OPTIONS, JwtHelperService, JwtModule} from "@auth0/angular-jwt";
+import {NgxFilesizeModule} from "ngx-filesize";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -66,10 +70,17 @@ import { UploadLoadingDialogComponent } from './upload-loading-dialog/upload-loa
     InfiniteScrollModule,
     MatProgressBarModule,
     MatFileUploadModule,
-    NgxFileDropModule
+    NgxFileDropModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService
   ],
   bootstrap: [AppComponent]
 })

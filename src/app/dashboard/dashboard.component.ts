@@ -4,11 +4,17 @@ import {MatSidenav} from "@angular/material/sidenav";
 import {ViewportRuler} from "@angular/cdk/overlay";
 import {IInfiniteScrollEvent} from "ngx-infinite-scroll";
 import {MediaMatcher} from "@angular/cdk/layout";
-import {FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
+import {NgxFileDropEntry} from "ngx-file-drop";
 import {FileService} from "../../service/file.service";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {FileUploadDialogComponent} from "../file-upload-dialog/file-upload-dialog.component";
 import {UploadLoadingDialogComponent} from "../upload-loading-dialog/upload-loading-dialog.component";
+import {FileInfo} from "../../datamodel/FileInfo";
+import {Router} from "@angular/router";
+import {JwtHelperService} from "@auth0/angular-jwt";
+import {FileType} from "../../utils/FileType";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {UploadStateService} from "../../service/upload-state.service";
 
 
 @Component({
@@ -20,8 +26,9 @@ export class DashboardComponent implements OnInit {
 
   wasTriggered: boolean = false;
   mobileQuery!: MediaQueryList;
-
-  loadingDialogRef!:MatDialogRef<UploadLoadingDialogComponent>;
+  loadingDialogRef!: MatDialogRef<UploadLoadingDialogComponent>;
+  loadedFiles: FileInfo[] = [];
+  userEmail!:string;
 
   @ViewChild('snav') snav!: MatSidenav;
 
@@ -33,7 +40,12 @@ export class DashboardComponent implements OnInit {
               private changeDetectorRef: ChangeDetectorRef,
               media: MediaMatcher,
               private fileService: FileService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private router:Router,
+              private jwtService:JwtHelperService,
+              private snackBar : MatSnackBar,
+              private uploadStateService : UploadStateService
+  ) {
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('', this.mobileQueryListener);
@@ -48,6 +60,14 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fileService.loadAllFiles()
+      .subscribe(fileData => {
+        this.loadedFiles = fileData;
+      })
+
+    let jwt = localStorage.getItem("ocl-jwt");
+    let decodedToken = this.jwtService.decodeToken(jwt as string);
+    this.userEmail = decodedToken.sub;
   }
 
   onWindowScroll($event: IInfiniteScrollEvent) {
@@ -55,13 +75,17 @@ export class DashboardComponent implements OnInit {
     console.log($event.currentScrollPosition)
   }
 
-  fileOver($event: any) {
-
-  }
 
   droppedFile(files: NgxFileDropEntry[]) {
+    if (files.length > 6){
+      this.snackBar.open("Only up to 6 files are allowed at once!", "Close", {
+        duration: 2000,
+        panelClass: ['mat-toolbar', 'mat-warn']
+      });
+      return;
+    }
 
-    if (this.loadingDialogRef){
+    if (this.loadingDialogRef) {
       this.loadingDialogRef.close();
     }
 
@@ -84,7 +108,45 @@ export class DashboardComponent implements OnInit {
           }
         });
         this.loadingDialogRef = loadingDialogRef;
+        this.uploadStateService.getFileInfo().subscribe(
+          resu=> {
+            if (resu){
+              console.log("the info : ", resu)
+              this.loadedFiles.push(resu);
+            }
+          }
+        );
+
+
+
 
       });
+
+
+
+
+
+  }
+
+  onLogoutClick() {
+    let jwt = localStorage.getItem("ocl-jwt");
+    if (jwt) {
+      localStorage.removeItem("ocl-jwt");
+      this.router.navigateByUrl("/login");
+    }
+  }
+
+  getIconBySuffix(fileType: string) {
+    switch (fileType){
+      case FileType.FILE : return  'insert_drive_file'
+      case FileType.IMAGE : return  'image'
+      case FileType.VIDEO : return  'play_circle'
+      case FileType.ARCHIVE : return  'archive'
+      default: return 'insert_drive_file'
+    }
+  }
+
+  onUploadClick() {
+
   }
 }
