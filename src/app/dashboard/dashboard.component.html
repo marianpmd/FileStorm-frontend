@@ -3,8 +3,15 @@
     <mat-nav-list class="nav-list">
       <mat-list-item [disableRipple]=true>{{userEmail}}</mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item class="add-button" (click)="onUploadClick()">
+      <mat-list-item [disableRipple]=true matRipple class="add-button" (click)="uploader.click()">
         <mat-icon color="accent">add_circle</mat-icon>
+        <input
+          hidden
+          type="file"
+          multiple
+          #uploader
+          (change)="onUploadClick($event)"
+        />
       </mat-list-item>
 
       <span class="example-spacer"></span>
@@ -32,7 +39,7 @@
     </div>
 
     <ngx-file-drop class="drop-area"
-                   (onFileDrop)="droppedFile($event)"
+                   (onFileDrop)="onFileDrop($event)"
                    [multiple]=true>
       <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
         <section class="files-container">

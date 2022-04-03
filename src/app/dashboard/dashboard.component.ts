@@ -4,7 +4,7 @@ import {MatSidenav} from "@angular/material/sidenav";
 import {ViewportRuler} from "@angular/cdk/overlay";
 import {IInfiniteScrollEvent} from "ngx-infinite-scroll";
 import {MediaMatcher} from "@angular/cdk/layout";
-import {NgxFileDropEntry} from "ngx-file-drop";
+import {FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {FileService} from "../../service/file.service";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {FileUploadDialogComponent} from "../file-upload-dialog/file-upload-dialog.component";
@@ -28,12 +28,13 @@ export class DashboardComponent implements OnInit {
   mobileQuery!: MediaQueryList;
   loadingDialogRef!: MatDialogRef<UploadLoadingDialogComponent>;
   loadedFiles: FileInfo[] = [];
-  userEmail!:string;
+  userEmail!: string;
+  testt: File[] = [];
 
   @ViewChild('snav') snav!: MatSidenav;
 
   private mobileQueryListener!: () => void;
-  private files: NgxFileDropEntry[] = [];
+  private files: File[] = [];
 
   constructor(private sidenavService: SidenavService,
               private ruler: ViewportRuler,
@@ -41,10 +42,10 @@ export class DashboardComponent implements OnInit {
               media: MediaMatcher,
               private fileService: FileService,
               private dialog: MatDialog,
-              private router:Router,
-              private jwtService:JwtHelperService,
-              private snackBar : MatSnackBar,
-              private uploadStateService : UploadStateService
+              private router: Router,
+              private jwtService: JwtHelperService,
+              private snackBar: MatSnackBar,
+              private uploadStateService: UploadStateService
   ) {
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -75,9 +76,33 @@ export class DashboardComponent implements OnInit {
     console.log($event.currentScrollPosition)
   }
 
+  async onFileDrop(files: NgxFileDropEntry[]) {
+    let fileArr: File[] = [];
+    for (let ngxFile of files) {
+      let fileEntry = ngxFile.fileEntry as FileSystemFileEntry;
+      let actualFile = await this.getFiles(fileEntry);
+      fileArr.push(<File>actualFile);
+    }
 
-  droppedFile(files: NgxFileDropEntry[]) {
-    if (files.length > 6){
+    this.handleFileUpload(fileArr);
+  }
+
+
+  private getFiles(fileEntry: FileSystemFileEntry) {
+    return new Promise(resolve => {
+      fileEntry.file(actualFile => {
+        resolve(actualFile);
+      })
+    })
+  }
+
+  onUploadClick($event: any) {
+    let fileList: FileList = $event.target.files;
+    this.handleFileUpload(Array.from(fileList));
+  }
+
+  handleFileUpload(files: File[]) {
+    if (files.length > 6) {
       this.snackBar.open("Only up to 6 files are allowed at once!", "Close", {
         duration: 2000,
         panelClass: ['mat-toolbar', 'mat-warn']
@@ -109,23 +134,14 @@ export class DashboardComponent implements OnInit {
         });
         this.loadingDialogRef = loadingDialogRef;
         this.uploadStateService.getFileInfo().subscribe(
-          resu=> {
-            if (resu){
+          resu => {
+            if (resu) {
               console.log("the info : ", resu)
               this.loadedFiles.push(resu);
             }
           }
         );
-
-
-
-
       });
-
-
-
-
-
   }
 
   onLogoutClick() {
@@ -137,16 +153,19 @@ export class DashboardComponent implements OnInit {
   }
 
   getIconBySuffix(fileType: string) {
-    switch (fileType){
-      case FileType.FILE : return  'insert_drive_file'
-      case FileType.IMAGE : return  'image'
-      case FileType.VIDEO : return  'play_circle'
-      case FileType.ARCHIVE : return  'archive'
-      default: return 'insert_drive_file'
+    switch (fileType) {
+      case FileType.FILE :
+        return 'insert_drive_file'
+      case FileType.IMAGE :
+        return 'image'
+      case FileType.VIDEO :
+        return 'play_circle'
+      case FileType.ARCHIVE :
+        return 'archive'
+      default:
+        return 'insert_drive_file'
     }
   }
 
-  onUploadClick() {
 
-  }
 }
