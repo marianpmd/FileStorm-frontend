@@ -36,6 +36,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { FileItemComponent } from './file-item/file-item.component';
 import { FileItemDialogComponent } from './file-item-dialog/file-item-dialog.component';
+import {MatAutocomplete, MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
@@ -81,6 +83,8 @@ import { FileItemDialogComponent } from './file-item-dialog/file-item-dialog.com
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    MatAutocompleteModule,
+    MatSelectModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},

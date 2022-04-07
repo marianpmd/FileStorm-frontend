@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
 
   private mobileQueryListener!: () => void;
   private files: File[] = [];
+  value: any;
 
   constructor(private sidenavService: SidenavService,
               private ruler: ViewportRuler,

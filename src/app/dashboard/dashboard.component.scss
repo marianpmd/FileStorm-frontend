@@ -88,11 +88,10 @@
       width: 100%;
       background-color: $primary;
     }
-
   }
 
   :hover.file-item {
-    background-color: #424242;
+    //background-color: rgba(0, 0, 0, 0.04);
   }
 }
 
@@ -142,3 +141,13 @@ mat-list-item.logout-container{
   }
 }
 
+.filtering-section {
+  margin-top: 7px;
+  margin-bottom: -10px;
+  flex-wrap: wrap;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+}
