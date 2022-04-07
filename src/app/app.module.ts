@@ -34,6 +34,8 @@ import {JWT_OPTIONS, JwtHelperService, JwtModule} from "@auth0/angular-jwt";
 import {NgxFilesizeModule} from "ngx-filesize";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { FileItemComponent } from './file-item/file-item.component';
+import { FileItemDialogComponent } from './file-item-dialog/file-item-dialog.component';
 
 
 @NgModule({
@@ -44,6 +46,8 @@ import { environment } from '../environments/environment';
     RegisterComponent,
     FileUploadDialogComponent,
     UploadLoadingDialogComponent,
+    FileItemComponent,
+    FileItemDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Download or delete file.</h2>
+<mat-dialog-content class="mat-typography">
+  <p>Filename : {{data.name}}</p>
+  <p>Size : {{computeFileSize(data.size)}}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="'download'" class="download-button" cdkFocusInitial>Download</button>
+  <button mat-button [mat-dialog-close]="'delete'" class="delete-button" cdkFocusInitial>Delete</button>
+</mat-dialog-actions>

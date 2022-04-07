@@ -1,5 +1,5 @@
 <mat-toolbar color="primary" class="toolbar">
-  <button mat-icon-button (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
+  <button  *ngIf="!isLocalPath()" mat-icon-button (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
   <div class="logo"><img id="logo-image" src="../assets/logo/logo-icon.svg" rel="crash"></div>
   <span class="logo-text">OwnCloud</span>
   <span class="example-spacer"></span>

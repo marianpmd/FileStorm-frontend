@@ -1,26 +1,25 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {FileInfo} from "../datamodel/FileInfo";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UploadStateService {
 
-  fileInfo!:FileInfo;
-  fileInfoSubject!:BehaviorSubject<FileInfo>;
+  fileInfo!: FileInfo;
+  fileInfoSubject!: BehaviorSubject<FileInfo>;
 
 
   constructor() {
     this.fileInfoSubject = new BehaviorSubject<FileInfo>(this.fileInfo);
   }
 
-  setFileInfo(fileInfo:FileInfo){
-    console.log("Setting file info : " , fileInfo)
-    this.fileInfoSubject.next({...fileInfo});
+  setFileInfo(fileInfo: FileInfo) {
+    this.fileInfoSubject.next(fileInfo);
   }
 
-  getFileInfo(){
+  getFileInfo() {
     return this.fileInfoSubject.asObservable();
   }
 }

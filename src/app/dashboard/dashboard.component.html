@@ -23,7 +23,9 @@
       </mat-list-item>
 
       <mat-list-item style="font-size:10px">58.9GB of 100GB used</mat-list-item>
-      <mat-list-item (click)="onLogoutClick()">Logout</mat-list-item>
+      <mat-list-item class="logout-container" (click)="onLogoutClick()">
+        <mat-icon class="logout-icon">logout</mat-icon>
+      </mat-list-item>
 
 
     </mat-nav-list>
@@ -44,7 +46,7 @@
       <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
         <section class="files-container">
 
-          <div class="file-item" matRipple *ngFor="let file of loadedFiles">
+          <div class="file-item" matRipple (click)="onFileItemClick(file)" *ngFor="let file of loadedFiles">
             <mat-icon class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
             <mat-divider></mat-divider>
             <p class="filename">{{file.name}}</p>

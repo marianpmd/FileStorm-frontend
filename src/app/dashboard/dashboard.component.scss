@@ -54,7 +54,7 @@
   margin-bottom: 7px;
   width: 100%;
   display: grid;
-  grid-gap: 7px;
+  grid-row-gap: 12px;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   justify-items: center;
 
@@ -128,3 +128,17 @@ mat-list-item.add-button {
 .no-button{
   background-color: red;
 }
+mat-list-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+mat-list-item.logout-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .mat-icon.logout-icon{
+    transform: rotate(180deg);
+  }
+}
+

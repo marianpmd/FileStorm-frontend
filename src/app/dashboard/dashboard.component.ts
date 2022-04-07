@@ -15,6 +15,9 @@ import {JwtHelperService} from "@auth0/angular-jwt";
 import {FileType} from "../../utils/FileType";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UploadStateService} from "../../service/upload-state.service";
+import {FileItemDialogComponent} from "../file-item-dialog/file-item-dialog.component";
+import {HttpStatusCode} from "@angular/common/http";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -29,7 +32,8 @@ export class DashboardComponent implements OnInit {
   loadingDialogRef!: MatDialogRef<UploadLoadingDialogComponent>;
   loadedFiles: FileInfo[] = [];
   userEmail!: string;
-  testt: File[] = [];
+  fileUploadSubscription!: Subscription;
+  lastAdded!:FileInfo;
 
   @ViewChild('snav') snav!: MatSidenav;
 
@@ -109,7 +113,9 @@ export class DashboardComponent implements OnInit {
       });
       return;
     }
-
+    if (this.fileUploadSubscription){
+      this.fileUploadSubscription.unsubscribe();
+    }
     if (this.loadingDialogRef) {
       this.loadingDialogRef.close();
     }
@@ -120,11 +126,10 @@ export class DashboardComponent implements OnInit {
 
     matDialogRef.afterClosed()
       .subscribe(result => {
-        console.log(result)
         if (!result) return;
         this.files = files;
 
-        let loadingDialogRef = this.dialog.open(UploadLoadingDialogComponent, {
+        this.loadingDialogRef = this.dialog.open(UploadLoadingDialogComponent, {
           data: files,
           hasBackdrop: false,
           position: {
@@ -132,15 +137,18 @@ export class DashboardComponent implements OnInit {
             bottom: "true"
           }
         });
-        this.loadingDialogRef = loadingDialogRef;
-        this.uploadStateService.getFileInfo().subscribe(
-          resu => {
-            if (resu) {
-              console.log("the info : ", resu)
-              this.loadedFiles.push(resu);
+        this.fileUploadSubscription = this.uploadStateService.getFileInfo().subscribe(
+          result => {
+            if (result) {
+              if (this.lastAdded !== result){
+                this.loadedFiles.push(result);
+                this.lastAdded = result;
+              }
             }
           }
         );
+
+
       });
   }
 
@@ -167,5 +175,37 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  onFileItemClick(file: FileInfo) {
+    let matDialogRef = this.dialog.open(FileItemDialogComponent, {
+      data: file
+    });
 
+    matDialogRef.afterClosed()
+      .subscribe(result => {
+        switch (result) {
+          case 'download' :
+            this.downloadFileById(file.id);
+            break;
+          case 'delete' :
+            this.deleteFileById(file.id);
+            break;
+        }
+      });
+  }
+
+  private downloadFileById(id: number) {
+    this.fileService.downloadFileById(id)
+      .subscribe(response=>{
+
+      });
+  }
+
+  private deleteFileById(id: number) {
+    this.fileService.deleteFileById(id)
+      .subscribe(response=>{
+        if (response.status === HttpStatusCode.Ok){
+          this.loadedFiles = this.loadedFiles.filter(fileInfo=>fileInfo.id !== id)
+        }
+      });
+  }
 }

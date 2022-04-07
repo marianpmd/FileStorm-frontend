@@ -1,0 +1,8 @@
+@import 'src/assets/mixins/base-colors';
+
+.download-button {
+  background-color: $primary;
+}
+.delete-button {
+  background-color: $warn;
+}

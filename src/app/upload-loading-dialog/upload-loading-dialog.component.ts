@@ -26,7 +26,6 @@ export class UploadLoadingDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("ALL DATA : ",this.data);
     this.data.forEach(actualFile => {
       this.fileService.uploadFiles(actualFile)
         .subscribe(
@@ -48,7 +47,6 @@ export class UploadLoadingDialogComponent implements OnInit {
               } else if (next.type === HttpEventType.Response) {
                 let fileUploadInfo = this.allFiles.get(actualFile);
                 fileUploadInfo!.uploadState = UploadState.DONE;
-                console.log("response ", fileUploadInfo)
                 this.uploadStateService.setFileInfo(next.body);
               }
             }

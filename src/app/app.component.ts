@@ -2,7 +2,6 @@ import {Component, HostBinding} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {OverlayContainer} from "@angular/cdk/overlay";
-import {CookieService} from "ngx-cookie-service";
 import {SidenavService} from "../service/sidenav.service";
 
 @Component({
@@ -18,7 +17,8 @@ export class AppComponent {
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
               private overlay: OverlayContainer,
-              private sidenavService : SidenavService) {
+              private sidenavService: SidenavService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -50,5 +50,9 @@ export class AppComponent {
 
   toggleSidenav() {
     this.sidenavService.toggle();
+  }
+
+  isLocalPath() : boolean {
+    return this.router.url === "/login";
   }
 }
