@@ -6,3 +6,8 @@
 .delete-button {
   background-color: $warn;
 }
+.filename{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

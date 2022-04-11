@@ -30,14 +30,14 @@ import {NgxFileDropModule} from "ngx-file-drop";
 import {XhrInterceptor} from "../interceptors/xhr.interceptor";
 import {FileUploadDialogComponent} from './file-upload-dialog/file-upload-dialog.component';
 import {UploadLoadingDialogComponent} from './upload-loading-dialog/upload-loading-dialog.component';
-import {JWT_OPTIONS, JwtHelperService, JwtModule} from "@auth0/angular-jwt";
-import {NgxFilesizeModule} from "ngx-filesize";
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
-import { FileItemComponent } from './file-item/file-item.component';
-import { FileItemDialogComponent } from './file-item-dialog/file-item-dialog.component';
-import {MatAutocomplete, MatAutocompleteModule} from "@angular/material/autocomplete";
+import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
+import {FileItemComponent} from './file-item/file-item.component';
+import {FileItemDialogComponent} from './file-item-dialog/file-item-dialog.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatSelectModule} from "@angular/material/select";
+import {FileUpdateDialogComponent} from './file-update-dialog/file-update-dialog.component';
 
 
 @NgModule({
@@ -50,6 +50,7 @@ import {MatSelectModule} from "@angular/material/select";
     UploadLoadingDialogComponent,
     FileItemComponent,
     FileItemDialogComponent,
+    FileUpdateDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,7 +89,7 @@ import {MatSelectModule} from "@angular/material/select";
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService
+    {provide: JWT_OPTIONS, useValue: JWT_OPTIONS}, JwtHelperService
   ],
   bootstrap: [AppComponent]
 })

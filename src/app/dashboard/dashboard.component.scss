@@ -148,6 +148,15 @@ mat-list-item.logout-container{
   width: 100%;
   display: flex;
   justify-content: center;
-  gap: 20px;
   align-items: center;
+
+  .search-input{
+    max-width: 230px;
+    min-width: 230px;
+    margin-right: 5px;
+  }
+
+  .tune-button{
+    margin-bottom: 15px;
+  }
 }

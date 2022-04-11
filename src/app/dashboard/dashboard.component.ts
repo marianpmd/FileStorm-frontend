@@ -18,6 +18,7 @@ import {UploadStateService} from "../../service/upload-state.service";
 import {FileItemDialogComponent} from "../file-item-dialog/file-item-dialog.component";
 import {HttpStatusCode} from "@angular/common/http";
 import {Subscription} from "rxjs";
+import {FileUpdateDialogComponent} from "../file-update-dialog/file-update-dialog.component";
 
 
 @Component({
@@ -33,7 +34,9 @@ export class DashboardComponent implements OnInit {
   loadedFiles: FileInfo[] = [];
   userEmail!: string;
   fileUploadSubscription!: Subscription;
-  lastAdded!:FileInfo;
+  lastAdded!: FileInfo;
+
+  sortBy!:string;
 
   @ViewChild('snav') snav!: MatSidenav;
 
@@ -59,6 +62,7 @@ export class DashboardComponent implements OnInit {
 
   ngAfterViewInit() {
     this.sidenavService.setSidenav(this.snav);
+    this.snav.autoFocus = false;
     if (!this.mobileQuery.matches) {
       this.snav.open();
       this.changeDetectorRef.detectChanges();
@@ -66,9 +70,13 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fileService.loadAllFiles()
+    //sortBy=lastModified&page=0
+    let sortBy = "lastModified";
+    let page = 0;
+    let asc = false;
+    this.fileService.loadAllFiles(sortBy, page, asc)
       .subscribe(fileData => {
-        this.loadedFiles = fileData;
+        this.loadedFiles = fileData.content;
       })
 
     let jwt = localStorage.getItem("ocl-jwt");
@@ -102,6 +110,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onUploadClick($event: any) {
+    console.log("on click")
     let fileList: FileList = $event.target.files;
     this.handleFileUpload(Array.from(fileList));
   }
@@ -114,43 +123,80 @@ export class DashboardComponent implements OnInit {
       });
       return;
     }
-    if (this.fileUploadSubscription){
+    if (this.fileUploadSubscription) {
       this.fileUploadSubscription.unsubscribe();
     }
     if (this.loadingDialogRef) {
       this.loadingDialogRef.close();
     }
-
+    console.log("uplading fil")
     let matDialogRef = this.dialog.open(FileUploadDialogComponent, {
       data: files
     });
 
     matDialogRef.afterClosed()
-      .subscribe(result => {
+      .subscribe(async result => {
         if (!result) return;
         this.files = files;
 
-        this.loadingDialogRef = this.dialog.open(UploadLoadingDialogComponent, {
-          data: files,
-          hasBackdrop: false,
-          position: {
-            right: "true",
-            bottom: "true"
-          }
-        });
-        this.fileUploadSubscription = this.uploadStateService.getFileInfo().subscribe(
-          result => {
-            if (result) {
-              if (this.lastAdded !== result){
-                this.loadedFiles.push(result);
-                this.lastAdded = result;
-              }
+        let anyFileExists = await this.checkIfAnyFileExists(files);
+        if (anyFileExists) {
+          console.log("Found a file that exists")
+          let fileAlreadyExistsDialogRef = this.dialog.open(FileUpdateDialogComponent);
+          fileAlreadyExistsDialogRef.afterClosed()
+            .subscribe(result => {
+              if (result == undefined) return;
+              this.startActualUpload(files, true);
+            })
+        } else {
+          this.startActualUpload(files, false);
+        }
+      });
+  }
+
+  private startActualUpload(files: File[], shouldUpload: boolean) {
+    this.loadingDialogRef = this.dialog.open(UploadLoadingDialogComponent, {
+      data: {files: files, shouldUpdate: shouldUpload},
+      hasBackdrop: false,
+      position: {
+        right: "true",
+        bottom: "true"
+      }
+    });
+
+    if (shouldUpload === false) {
+      this.fileUploadSubscription = this.uploadStateService.getFileInfo().subscribe(
+        result => {
+          if (result) {
+            if (this.lastAdded !== result) {
+              this.loadedFiles.push(result);
+              this.lastAdded = result;
             }
           }
-        );
+        }
+      );
+    }
+  }
+
+  private async checkIfAnyFileExists(files: File[]) {
+    for (const file of files) {
+      console.log("Checking file : ", file)
+      let res = await this.checkOneFile(file);
+      if (res === true) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 
-      });
+  private async checkOneFile(file: File) {
+    return new Promise((resolve => {
+      this.fileService.checkFileByName(file.name)
+        .subscribe(exists => {
+          resolve(exists);
+        })
+    }))
   }
 
   onLogoutClick() {
@@ -196,17 +242,26 @@ export class DashboardComponent implements OnInit {
 
   private downloadFileById(id: number) {
     this.fileService.downloadFileById(id)
-      .subscribe(response=>{
+      .subscribe(response => {
 
       });
   }
 
   private deleteFileById(id: number) {
     this.fileService.deleteFileById(id)
-      .subscribe(response=>{
-        if (response.status === HttpStatusCode.Ok){
-          this.loadedFiles = this.loadedFiles.filter(fileInfo=>fileInfo.id !== id)
+      .subscribe(response => {
+        if (response.status === HttpStatusCode.Ok) {
+          this.loadedFiles = this.loadedFiles.filter(fileInfo => fileInfo.id !== id)
         }
       });
+  }
+
+  uploaderAction(uploader: HTMLInputElement) {
+    if (this.loadingDialogRef) {
+      this.loadingDialogRef.close();
+      uploader.value = '';
+    }
+    console.log("clicked test")
+    uploader.click();
   }
 }

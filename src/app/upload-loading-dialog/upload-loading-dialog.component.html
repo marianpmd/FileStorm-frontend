@@ -4,7 +4,8 @@
 <div mat-card-content class="container">
   <ng-container *ngFor="let file of allFiles | keyvalue">
     <p class="filename">{{file.key.name}}</p>
-    <mat-progress-bar [mode]=progressBarMode *ngIf="isUploading(file!.value)"
+    <mat-progress-bar [mode]=progressBarMode
+                      *ngIf="isUploading(file!.value)"
       [value]="file.value.progress" ></mat-progress-bar>
     <mat-icon class="done-tick"
               *ngIf="isDone(file!.value)">done</mat-icon>

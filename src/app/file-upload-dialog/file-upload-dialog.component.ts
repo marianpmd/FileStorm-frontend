@@ -12,7 +12,7 @@ export class FileUploadDialogComponent implements OnInit {
   allFiles: File[] = [];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: File[]
+    @Inject(MAT_DIALOG_DATA) private data: File[],
   ) {
   }
 

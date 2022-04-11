@@ -2,12 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../environments/environment";
 import {Observable, tap} from "rxjs";
-import {FileInfo} from "../datamodel/FileInfo";
+import {FileInfo, FileInfoPaged} from "../datamodel/FileInfo";
 
 const UPLOAD_URL = environment.baseUrl + '/file/upload';
 const LOAD_ALL_URL = environment.baseUrl + '/file/all';
 const DOWNLOAD_ONE_URL = environment.baseUrl + '/file/one';
 const DELETE_ONE_URL = environment.baseUrl + '/file/delete/one';
+const CHECK_FILE_URL = environment.baseUrl + '/file/check';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,13 @@ export class FileService {
   constructor(private http: HttpClient) {
   }
 
-  uploadFiles(file: File) {
+  uploadFile(file: File, shouldUpdate?: boolean) {
     const formData = new FormData()
     formData.append('file', file);
+
+    if (shouldUpdate) {
+      formData.append("shouldUpdate", shouldUpdate as unknown as string);
+    }
 
     return this.http.post(UPLOAD_URL, formData, {
       reportProgress: true,
@@ -28,8 +33,14 @@ export class FileService {
     });
   }
 
-  loadAllFiles(): Observable<FileInfo[]> {
-    return this.http.get<FileInfo[]>(LOAD_ALL_URL);
+  loadAllFiles(sortBy: string, page: number, asc: boolean): Observable<FileInfoPaged> {
+    return this.http.get<FileInfoPaged>(LOAD_ALL_URL, {
+      params: {
+        sortBy: sortBy,
+        page: page,
+        asc: asc
+      }
+    });
   }
 
   downloadFileById(fileId: number) {
@@ -80,6 +91,14 @@ export class FileService {
         id: fileId
       },
       observe: "response"
+    });
+  }
+
+  checkFileByName(name: string) {
+    return this.http.get<boolean>(CHECK_FILE_URL, {
+      params: {
+        filename: name
+      }
     });
   }
 }

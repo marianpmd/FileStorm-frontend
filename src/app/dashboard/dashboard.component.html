@@ -3,7 +3,7 @@
     <mat-nav-list class="nav-list">
       <mat-list-item [disableRipple]=true>{{userEmail}}</mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item [disableRipple]=true matRipple class="add-button" (click)="uploader.click()">
+      <mat-list-item [disableRipple]=true matRipple class="add-button" (click)="uploaderAction(uploader)">
         <mat-icon color="accent">add_circle</mat-icon>
         <input
           hidden
@@ -44,9 +44,10 @@
                    (onFileDrop)="onFileDrop($event)"
                    [multiple]=true>
       <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+
         <div class="filtering-section">
 
-          <mat-form-field appearance="outline">
+          <mat-form-field class="search-input" appearance="fill">
             <mat-label>Clearable input</mat-label>
             <input matInput type="text" [(ngModel)]="value">
             <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
@@ -54,19 +55,9 @@
             </button>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Select 1</mat-label>
-            <mat-select>
-              <mat-option>1</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" color="primary">
-            <mat-label>Select 2</mat-label>
-            <mat-select>
-              <mat-option>1</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <button class="tune-button" cdkfocusinitial mat-icon-button>
+            <mat-icon>tune</mat-icon>
+          </button>
 
         </div>
 
