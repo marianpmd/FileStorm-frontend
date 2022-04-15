@@ -1,0 +1,27 @@
+<p mat-dialog-title>Choose how to sort the items </p>
+<mat-divider></mat-divider>
+<div class="main">
+  <section class="left">
+    <mat-radio-group class="radio-buttons" [(ngModel)]="sortBy">
+      <mat-radio-button color="accent" value="lastModified"> Last Modified</mat-radio-button>
+      <mat-radio-button color="accent" value="size"> Size</mat-radio-button>
+      <mat-radio-button color="accent" value="fileType"> File Type</mat-radio-button>
+    </mat-radio-group>
+  </section>
+
+  <section class="right">
+    <div class="right-asc-desc">
+      <mat-icon class="arrow">south</mat-icon>
+      <mat-slide-toggle [(ngModel)]="asc"></mat-slide-toggle>
+      <mat-icon class="arrow">north</mat-icon>
+    </div>
+  </section>
+
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="center">
+  <button mat-flat-button color="accent" (click)="onFilterApply()" >Apply</button>
+</mat-dialog-actions>
+
+
+

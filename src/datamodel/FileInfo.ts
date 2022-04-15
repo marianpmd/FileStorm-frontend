@@ -4,6 +4,8 @@ export interface FileInfo {
   path: string;
   size: number;
   fileType: string;
+  isMedia: boolean;
+  isLoaded: boolean;
 }
 
 export interface Sort {

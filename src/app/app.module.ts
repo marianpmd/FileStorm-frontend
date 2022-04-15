@@ -33,11 +33,14 @@ import {UploadLoadingDialogComponent} from './upload-loading-dialog/upload-loadi
 import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
-import {FileItemComponent} from './file-item/file-item.component';
 import {FileItemDialogComponent} from './file-item-dialog/file-item-dialog.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatSelectModule} from "@angular/material/select";
 import {FileUpdateDialogComponent} from './file-update-dialog/file-update-dialog.component';
+import {FiltersDialogComponent} from './filters-dialog/filters-dialog.component';
+import {MatRadioModule} from "@angular/material/radio";
+import {NgxScrollTopModule} from 'ngx-scrolltop';
+import {GoTopButtonModule} from "ng-go-top-button";
 
 
 @NgModule({
@@ -48,9 +51,9 @@ import {FileUpdateDialogComponent} from './file-update-dialog/file-update-dialog
     RegisterComponent,
     FileUploadDialogComponent,
     UploadLoadingDialogComponent,
-    FileItemComponent,
     FileItemDialogComponent,
     FileUpdateDialogComponent,
+    FiltersDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +88,10 @@ import {FileUpdateDialogComponent} from './file-update-dialog/file-update-dialog
       registrationStrategy: 'registerWhenStable:30000'
     }),
     MatAutocompleteModule,
-    MatSelectModule
+    MatSelectModule,
+    MatRadioModule,
+    NgxScrollTopModule,
+    GoTopButtonModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},

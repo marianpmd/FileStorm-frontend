@@ -1,5 +1,5 @@
 <mat-sidenav-container class="container">
-  <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'">
+  <mat-sidenav class="sidenav" #snav [mode]="mobileQuery.matches ? 'over' : 'side'">
     <mat-nav-list class="nav-list">
       <mat-list-item [disableRipple]=true>{{userEmail}}</mat-list-item>
       <mat-divider></mat-divider>
@@ -19,7 +19,7 @@
       <mat-list-item>Available Space</mat-list-item>
 
       <mat-list-item>
-        <mat-progress-bar [value]="58.9"></mat-progress-bar>
+        <mat-progress-bar color="accent" [value]="58.9"></mat-progress-bar>
       </mat-list-item>
 
       <mat-list-item style="font-size:10px">58.9GB of 100GB used</mat-list-item>
@@ -34,46 +34,58 @@
     infinite-scroll
     class="infinite-container"
     [scrollWindow]="false"
+    [infiniteScrollDistance]="1"
     (scrolled)="onWindowScroll($event)">
+
     <div class="no-files-container" *ngIf="loadedFiles.length === 0 || !loadedFiles">
-      <p class="no-files-message">No files to show.
+      <p *ngIf="loadedFiles.length === 0 && isRequestMade" class="no-files-message">No files to show.
         To upload a file either drag and drop it here, or us the '+' sign in the left side menu.</p>
     </div>
 
     <ngx-file-drop class="drop-area"
                    (onFileDrop)="onFileDrop($event)"
                    [multiple]=true>
-      <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+      <ng-template ngx-file-drop-content-tmp
+                   let-openFileSelector="openFileSelector">
 
-        <div class="filtering-section">
+        <div class="isLoading" *ngIf="isLoading">
+          <mat-progress-spinner class="spinner" color="primary" mode="indeterminate"></mat-progress-spinner>
+        </div>
 
-          <mat-form-field class="search-input" appearance="fill">
-            <mat-label>Clearable input</mat-label>
-            <input matInput type="text" [(ngModel)]="value">
-            <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
-              <mat-icon>close</mat-icon>
-            </button>
+        <div *ngIf="!isLoading" class="filtering-section">
+
+          <mat-form-field>
+            <input class="search-bar" matInput placeholder="Search" aria-label="State" [matAutocomplete]="auto" [formControl]="searchFileControl">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option disabled *ngIf="isLoadingAutocomplete">
+                <mat-progress-bar class="autocomplete-spinner" mode="indeterminate"></mat-progress-bar>
+              </mat-option>
+              <ng-container *ngIf="!isLoadingAutocomplete">
+                <mat-option *ngFor="let file of filteredFiles" [value]="file.name">
+                  <span>{{file.name}}</span>
+                </mat-option>
+              </ng-container>
+            </mat-autocomplete>
           </mat-form-field>
 
-          <button class="tune-button" cdkfocusinitial mat-icon-button>
+          <button class="tune-button" mat-mini-fab (click)="openFilters()">
             <mat-icon>tune</mat-icon>
           </button>
 
         </div>
 
 
-        <section class="files-container">
+        <section class="files-container" *ngIf="!isLoading">
 
           <div class="file-item" matRipple (click)="onFileItemClick(file)" *ngFor="let file of loadedFiles">
-            <mat-icon class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
+            <mat-icon *ngIf="!file.isMedia || file.isLoaded" class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
+            <img *ngIf="file.isMedia">
             <mat-divider></mat-divider>
             <p class="filename">{{file.name}}</p>
           </div>
 
         </section>
       </ng-template>
-
-
     </ngx-file-drop>
   </mat-sidenav-content>
 </mat-sidenav-container>

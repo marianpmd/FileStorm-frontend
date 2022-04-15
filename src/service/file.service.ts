@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../environments/environment";
 import {Observable, tap} from "rxjs";
-import {FileInfo, FileInfoPaged} from "../datamodel/FileInfo";
+import {FileInfoPaged} from "../datamodel/FileInfo";
 
 const UPLOAD_URL = environment.baseUrl + '/file/upload';
 const LOAD_ALL_URL = environment.baseUrl + '/file/all';
@@ -33,11 +33,12 @@ export class FileService {
     });
   }
 
-  loadAllFiles(sortBy: string, page: number, asc: boolean): Observable<FileInfoPaged> {
+  loadAllFiles(sortBy: string, page: number, size: number, asc: boolean): Observable<FileInfoPaged> {
     return this.http.get<FileInfoPaged>(LOAD_ALL_URL, {
       params: {
         sortBy: sortBy,
         page: page,
+        size: size,
         asc: asc
       }
     });

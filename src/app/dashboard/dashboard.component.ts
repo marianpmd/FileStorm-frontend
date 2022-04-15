@@ -19,6 +19,8 @@ import {FileItemDialogComponent} from "../file-item-dialog/file-item-dialog.comp
 import {HttpStatusCode} from "@angular/common/http";
 import {Subscription} from "rxjs";
 import {FileUpdateDialogComponent} from "../file-update-dialog/file-update-dialog.component";
+import {FiltersDialogComponent} from "../filters-dialog/filters-dialog.component";
+import {FormControl} from "@angular/forms";
 
 
 @Component({
@@ -28,21 +30,29 @@ import {FileUpdateDialogComponent} from "../file-update-dialog/file-update-dialo
 })
 export class DashboardComponent implements OnInit {
 
+  @ViewChild('snav') snav!: MatSidenav;
+
   wasTriggered: boolean = false;
   mobileQuery!: MediaQueryList;
   loadingDialogRef!: MatDialogRef<UploadLoadingDialogComponent>;
   loadedFiles: FileInfo[] = [];
   userEmail!: string;
   fileUploadSubscription!: Subscription;
+
   lastAdded!: FileInfo;
+  sortBy: string = 'lastModified';
+  asc: boolean = false;
 
-  sortBy!:string;
+  currentPage: number = 0;
 
-  @ViewChild('snav') snav!: MatSidenav;
-
-  private mobileQueryListener!: () => void;
-  private files: File[] = [];
   value: any;
+  isLoading: boolean;
+  isRequestMade: boolean = false;
+  searchFileControl: FormControl = new FormControl('');
+  isLoadingAutocomplete: boolean = false;
+  filteredFiles: FileInfo[] = [];
+  windowScrolled: boolean = false;
+
 
   constructor(private sidenavService: SidenavService,
               private ruler: ViewportRuler,
@@ -55,10 +65,13 @@ export class DashboardComponent implements OnInit {
               private snackBar: MatSnackBar,
               private uploadStateService: UploadStateService
   ) {
+    this.isLoading = true;
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('', this.mobileQueryListener);
   }
+
+  private mobileQueryListener!: () => void;
 
   ngAfterViewInit() {
     this.sidenavService.setSidenav(this.snav);
@@ -70,23 +83,24 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //sortBy=lastModified&page=0
-    let sortBy = "lastModified";
-    let page = 0;
-    let asc = false;
-    this.fileService.loadAllFiles(sortBy, page, asc)
-      .subscribe(fileData => {
-        this.loadedFiles = fileData.content;
-      })
+
+    this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc);
 
     let jwt = localStorage.getItem("ocl-jwt");
     let decodedToken = this.jwtService.decodeToken(jwt as string);
     this.userEmail = decodedToken.sub;
+
+    let div = document.getElementsByClassName("infinite-container")[0];
+    div.addEventListener('scroll', () => {
+      this.windowScrolled = div.scrollTop >= 100;
+    })
   }
 
   onWindowScroll($event: IInfiniteScrollEvent) {
     console.log("TRIGGER LOAD")
     console.log($event.currentScrollPosition)
+
+    this.loadFilesAndAppend(this.sortBy, this.currentPage, 100, this.asc);
   }
 
   async onFileDrop(files: NgxFileDropEntry[]) {
@@ -137,7 +151,6 @@ export class DashboardComponent implements OnInit {
     matDialogRef.afterClosed()
       .subscribe(async result => {
         if (!result) return;
-        this.files = files;
 
         let anyFileExists = await this.checkIfAnyFileExists(files);
         if (anyFileExists) {
@@ -217,6 +230,8 @@ export class DashboardComponent implements OnInit {
         return 'play_circle'
       case FileType.ARCHIVE :
         return 'archive'
+      case FileType.PDF :
+        return 'picture_as_pdf'
       default:
         return 'insert_drive_file'
     }
@@ -263,5 +278,79 @@ export class DashboardComponent implements OnInit {
     }
     console.log("clicked test")
     uploader.click();
+  }
+
+  openFilters() {
+    let matDialogRef = this.dialog.open(FiltersDialogComponent, {
+      data: {
+        sortBy: this.sortBy,
+        asc: this.asc
+      },
+      autoFocus: false
+    });
+
+    matDialogRef.afterClosed()
+      .subscribe(result => {
+        console.log("Chosen result : ", result);
+        if (!result) return;
+        this.sortBy = result.sortBy;
+        this.asc = result.asc;
+
+        this.currentPage = 0; //reset
+
+        this.loadAllInitialFilesPaginated(this.sortBy, this.currentPage, 100, this.asc)
+      })
+  }
+
+
+  private loadAllInitialFilesPaginated(sortBy: string, page: number, size: number, asc: boolean) {
+    this.fileService.loadAllFiles(sortBy, page, size, asc)
+      .subscribe(fileData => {
+        // this.loadedFiles = fileData.content;
+        fileData.content.forEach(fdata=>{
+          if (fdata.fileType === FileType.IMAGE ||
+          fdata.fileType === FileType.VIDEO)
+            fdata.isMedia = true;
+
+          this.loadedFiles.push(fdata);
+        })
+
+        console.log("files : " , this.loadedFiles)
+        if (!fileData.last)
+          this.currentPage = fileData.pageable.pageNumber + 1;
+        this.isRequestMade = true;
+        this.isLoading = false;
+      })
+  }
+
+  private loadFilesAndAppend(sortBy: string, currentPage: number, size: number, asc: boolean) {
+    this.fileService.loadAllFiles(sortBy, currentPage, size, asc)
+      .subscribe(fileData => {
+        console.log("calling append")
+        if (fileData.content.length !== 0) {
+          console.log("is not last")
+
+          fileData.content.forEach(fdata=>{
+            if (fdata.fileType === FileType.IMAGE ||
+              fdata.fileType === FileType.VIDEO)
+              fdata.isMedia = true;
+
+            this.loadedFiles.push(fdata);
+          })
+
+          this.currentPage = fileData.pageable.pageNumber + 1;
+          // this.loadedFiles.push(...fileData.content);
+          console.log("pushed files : " , this.loadedFiles)
+        }
+      })
+  }
+
+  scrollToTop() {
+    // @ts-ignore
+    return document.getElementsByClassName('infinite-container')[0].scroll({
+      behavior: 'smooth',
+      top: 0,
+      left: 0
+    });
   }
 }
