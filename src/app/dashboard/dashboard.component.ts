@@ -297,6 +297,7 @@ export class DashboardComponent implements OnInit {
         this.asc = result.asc;
 
         this.currentPage = 0; //reset
+        this.loadedFiles = [];
 
         this.loadAllInitialFilesPaginated(this.sortBy, this.currentPage, 100, this.asc)
       })
@@ -306,16 +307,15 @@ export class DashboardComponent implements OnInit {
   private loadAllInitialFilesPaginated(sortBy: string, page: number, size: number, asc: boolean) {
     this.fileService.loadAllFiles(sortBy, page, size, asc)
       .subscribe(fileData => {
-        // this.loadedFiles = fileData.content;
-        fileData.content.forEach(fdata=>{
+        fileData.content.forEach(fdata => {
           if (fdata.fileType === FileType.IMAGE ||
-          fdata.fileType === FileType.VIDEO)
+            fdata.fileType === FileType.VIDEO)
             fdata.isMedia = true;
 
           this.loadedFiles.push(fdata);
         })
 
-        console.log("files : " , this.loadedFiles)
+        console.log("files : ", this.loadedFiles)
         if (!fileData.last)
           this.currentPage = fileData.pageable.pageNumber + 1;
         this.isRequestMade = true;
@@ -330,7 +330,7 @@ export class DashboardComponent implements OnInit {
         if (fileData.content.length !== 0) {
           console.log("is not last")
 
-          fileData.content.forEach(fdata=>{
+          fileData.content.forEach(fdata => {
             if (fdata.fileType === FileType.IMAGE ||
               fdata.fileType === FileType.VIDEO)
               fdata.isMedia = true;
@@ -339,8 +339,7 @@ export class DashboardComponent implements OnInit {
           })
 
           this.currentPage = fileData.pageable.pageNumber + 1;
-          // this.loadedFiles.push(...fileData.content);
-          console.log("pushed files : " , this.loadedFiles)
+          console.log("pushed files : ", this.loadedFiles)
         }
       })
   }

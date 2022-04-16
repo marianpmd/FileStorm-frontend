@@ -78,8 +78,7 @@
         <section class="files-container" *ngIf="!isLoading">
 
           <div class="file-item" matRipple (click)="onFileItemClick(file)" *ngFor="let file of loadedFiles">
-            <mat-icon *ngIf="!file.isMedia || file.isLoaded" class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
-            <img *ngIf="file.isMedia">
+            <mat-icon class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
             <mat-divider></mat-divider>
             <p class="filename">{{file.name}}</p>
           </div>

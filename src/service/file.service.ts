@@ -20,6 +20,7 @@ export class FileService {
 
   uploadFile(file: File, shouldUpdate?: boolean) {
     const formData = new FormData()
+    const headers = new HttpHeaders({ 'ngsw-bypass': ''});
     formData.append('file', file);
 
     if (shouldUpdate) {
@@ -29,7 +30,8 @@ export class FileService {
     return this.http.post(UPLOAD_URL, formData, {
       reportProgress: true,
       responseType: 'json',
-      observe: 'events'
+      observe: 'events',
+      headers: headers
     });
   }
 
