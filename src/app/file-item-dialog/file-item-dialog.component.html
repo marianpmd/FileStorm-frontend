@@ -1,9 +1,30 @@
-<h2 mat-dialog-title>Download or delete file.</h2>
-<mat-dialog-content class="mat-typography">
-  <p class="filename">Filename : {{data.name}}</p>
-  <p>Size : {{computeFileSize(data.size)}}</p>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="'download'" class="download-button" cdkFocusInitial>Download</button>
-  <button mat-button [mat-dialog-close]="'delete'" class="delete-button" cdkFocusInitial>Delete</button>
-</mat-dialog-actions>
+<div class="main">
+  <h2 mat-dialog-title>Download or delete file.</h2>
+  <mat-dialog-content class="mat-typography">
+    <p class="filename">Filename : {{data.name}}</p>
+    <p>Size : {{computeFileSize(data.size)}}</p>
+    <div class="content">
+      <mat-progress-spinner *ngIf="!isLoaded" [mode]="progressMode"></mat-progress-spinner>
+      <p *ngIf="!isMedia">No preview available.</p>
+      <pdf-viewer *ngIf="isLoaded && isMedia && isPdf(data.fileType)"
+                  [src]="source"
+                  [render-text]="true"
+                  [fit-to-page]="true"
+                  [show-borders]="true"
+                  style="width: 100vw; height: 100vh;"
+
+      ></pdf-viewer>
+
+      <div class="image-container">
+        <img *ngIf="isLoaded && isMedia && isImage(data.fileType)"
+             [src]="sourceAsBlob(source)"
+             class="image-resource"
+             alt="image"></div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="'download'" class="download-button" cdkFocusInitial>Download</button>
+    <button mat-button [mat-dialog-close]="'delete'" class="delete-button" cdkFocusInitial>Delete</button>
+    <button mat-mini-fab [mat-dialog-close]="" class="cancel-button">x</button>
+  </mat-dialog-actions>
+</div>

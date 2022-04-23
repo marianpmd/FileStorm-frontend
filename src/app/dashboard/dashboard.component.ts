@@ -309,7 +309,8 @@ export class DashboardComponent implements OnInit {
       .subscribe(fileData => {
         fileData.content.forEach(fdata => {
           if (fdata.fileType === FileType.IMAGE ||
-            fdata.fileType === FileType.VIDEO)
+            fdata.fileType === FileType.VIDEO ||
+            fdata.fileType === FileType.PDF)
             fdata.isMedia = true;
 
           this.loadedFiles.push(fdata);
@@ -332,7 +333,8 @@ export class DashboardComponent implements OnInit {
 
           fileData.content.forEach(fdata => {
             if (fdata.fileType === FileType.IMAGE ||
-              fdata.fileType === FileType.VIDEO)
+              fdata.fileType === FileType.VIDEO||
+              fdata.fileType === FileType.PDF)
               fdata.isMedia = true;
 
             this.loadedFiles.push(fdata);

@@ -104,4 +104,13 @@ export class FileService {
       }
     });
   }
+
+  getByFileId(id: number) {
+    return this.http.get(DOWNLOAD_ONE_URL,{
+      responseType: 'arraybuffer' as 'json',
+      params : {
+        id : id
+      }
+    })
+  }
 }

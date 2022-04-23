@@ -55,7 +55,8 @@
         <div *ngIf="!isLoading" class="filtering-section">
 
           <mat-form-field>
-            <input class="search-bar" matInput placeholder="Search" aria-label="State" [matAutocomplete]="auto" [formControl]="searchFileControl">
+            <input class="search-bar" matInput placeholder="Search" aria-label="State" [matAutocomplete]="auto"
+                   [formControl]="searchFileControl">
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option disabled *ngIf="isLoadingAutocomplete">
                 <mat-progress-bar class="autocomplete-spinner" mode="indeterminate"></mat-progress-bar>
@@ -81,6 +82,12 @@
             <mat-icon class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
             <mat-divider></mat-divider>
             <p class="filename">{{file.name}}</p>
+          </div>
+
+          <div class="scroll-top" [ngClass]="{ 'show-scrollTop': windowScrolled }">
+            <button mat-mini-fab (click)="scrollToTop()">
+              <mat-icon>expand_less</mat-icon>
+            </button>
           </div>
 
         </section>

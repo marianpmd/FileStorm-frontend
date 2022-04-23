@@ -1,13 +1,64 @@
 @import 'src/assets/mixins/base-colors';
 
-.download-button {
-  background-color: $primary;
+::ng-deep.mat-dialog-container {
+  padding-bottom: 5px;
 }
-.delete-button {
-  background-color: $warn;
-}
-.filename{
-  text-overflow: ellipsis;
+
+.main {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  white-space: nowrap;
+  mat-dialog-content {
+    width: 100%;
+    height: 100%;
+  }
+
+  .download-button {
+    background-color: $primary;
+  }
+
+  .delete-button {
+    background-color: $warn;
+  }
+
+  mat-dialog-actions {
+    margin-bottom: 5px;
+  }
+
+  .cancel-button {
+    background-color: #3f3f3f;
+  }
+
+  .filename {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+}
+
+.image-container {
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .image-resource {
+    object-fit: fill;
+    max-width: 80%;
+    max-height: 80%;
+  }
+}
+@media only screen and (min-width : 320px) {
+
+  ::ng-deep.mat-dialog-container {
+    max-height: none;
+  }
+
 }
