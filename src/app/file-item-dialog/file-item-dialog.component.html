@@ -4,8 +4,8 @@
     <p class="filename">Filename : {{data.name}}</p>
     <p>Size : {{computeFileSize(data.size)}}</p>
     <div class="content">
-      <mat-progress-spinner *ngIf="!isLoaded" [mode]="progressMode"></mat-progress-spinner>
-      <p *ngIf="!isMedia">No preview available.</p>
+      <mat-progress-spinner *ngIf="!isLoaded && !isMedia" [mode]="progressMode"></mat-progress-spinner>
+      <p class="no-prev-message" *ngIf="!isMedia || data.isMedia === undefined">No preview available.</p>
       <pdf-viewer *ngIf="isLoaded && isMedia && isPdf(data.fileType)"
                   [src]="source"
                   [render-text]="true"
@@ -18,7 +18,7 @@
       <div class="image-container">
         <img *ngIf="isLoaded && isMedia && isImage(data.fileType)"
              [src]="sourceAsBlob(source)"
-             class="image-resource"
+             class="image-resource mat-elevation-z8"
              alt="image"></div>
     </div>
   </mat-dialog-content>

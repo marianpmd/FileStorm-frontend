@@ -53,6 +53,7 @@ export class FileItemDialogComponent implements OnInit {
   }
 
   sourceAsBlob(source: any) {
+    console.log("IS IMAGE")
     let blob = new Blob([source]);
     const unsafeURL = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(unsafeURL);

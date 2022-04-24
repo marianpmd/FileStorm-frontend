@@ -2,13 +2,14 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../environments/environment";
 import {Observable, tap} from "rxjs";
-import {FileInfoPaged} from "../datamodel/FileInfo";
+import {FileInfo, FileInfoPaged} from "../datamodel/FileInfo";
 
 const UPLOAD_URL = environment.baseUrl + '/file/upload';
 const LOAD_ALL_URL = environment.baseUrl + '/file/all';
 const DOWNLOAD_ONE_URL = environment.baseUrl + '/file/one';
 const DELETE_ONE_URL = environment.baseUrl + '/file/delete/one';
 const CHECK_FILE_URL = environment.baseUrl + '/file/check';
+const LOAD_BY_KEYWORD = environment.baseUrl + '/file/byKeyword';
 
 @Injectable({
   providedIn: 'root'
@@ -110,6 +111,14 @@ export class FileService {
       responseType: 'arraybuffer' as 'json',
       params : {
         id : id
+      }
+    })
+  }
+
+  findAllByKeyword(value : string) {
+    return this.http.get<FileInfo[]>(LOAD_BY_KEYWORD,{
+      params:{
+        keyword : value
       }
     })
   }

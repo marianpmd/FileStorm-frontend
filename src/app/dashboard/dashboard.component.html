@@ -3,7 +3,15 @@
     <mat-nav-list class="nav-list">
       <mat-list-item [disableRipple]=true>{{userEmail}}</mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item [disableRipple]=true matRipple class="add-button" (click)="uploaderAction(uploader)">
+      <mat-list-item [disableRipple]=true matRipple class="add-button" [mat-menu-trigger-for]="menu" > <!--(click)="uploaderAction(uploader)"-->
+        <mat-menu #menu xPosition="before">
+          <button (click)="uploaderAction(uploader)" mat-menu-item>
+            <mat-icon>upload_file</mat-icon>File
+          </button>
+          <button mat-menu-item>
+            <mat-icon>create_new_folder</mat-icon>Directory
+          </button>
+        </mat-menu>
         <mat-icon color="accent">add_circle</mat-icon>
         <input
           hidden
@@ -47,32 +55,21 @@
                    [multiple]=true>
       <ng-template ngx-file-drop-content-tmp
                    let-openFileSelector="openFileSelector">
-
-        <div class="isLoading" *ngIf="isLoading">
-          <mat-progress-spinner class="spinner" color="primary" mode="indeterminate"></mat-progress-spinner>
-        </div>
-
-        <div *ngIf="!isLoading" class="filtering-section">
+        <div [class.show]="isLoading" class="filtering-section">
 
           <mat-form-field>
-            <input class="search-bar" matInput placeholder="Search" aria-label="State" [matAutocomplete]="auto"
+            <input #auto autofocus class="search-bar" matInput placeholder="Search" aria-label="State"
                    [formControl]="searchFileControl">
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option disabled *ngIf="isLoadingAutocomplete">
-                <mat-progress-bar class="autocomplete-spinner" mode="indeterminate"></mat-progress-bar>
-              </mat-option>
-              <ng-container *ngIf="!isLoadingAutocomplete">
-                <mat-option *ngFor="let file of filteredFiles" [value]="file.name">
-                  <span>{{file.name}}</span>
-                </mat-option>
-              </ng-container>
-            </mat-autocomplete>
           </mat-form-field>
 
           <button class="tune-button" mat-mini-fab (click)="openFilters()">
             <mat-icon>tune</mat-icon>
           </button>
 
+        </div>
+
+        <div class="isLoading" *ngIf="isLoading">
+          <mat-progress-spinner class="spinner" color="primary" mode="indeterminate"></mat-progress-spinner>
         </div>
 
 

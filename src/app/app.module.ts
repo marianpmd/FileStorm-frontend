@@ -42,6 +42,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import {NgxScrollTopModule} from 'ngx-scrolltop';
 import {GoTopButtonModule} from "ng-go-top-button";
 import {PdfViewerModule} from "ng2-pdf-viewer";
+import {MatMenuModule} from "@angular/material/menu";
 
 
 @NgModule({
@@ -93,7 +94,8 @@ import {PdfViewerModule} from "ng2-pdf-viewer";
     MatRadioModule,
     NgxScrollTopModule,
     GoTopButtonModule,
-    PdfViewerModule
+    PdfViewerModule,
+    MatMenuModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {SidenavService} from "../../service/sidenav.service";
 import {MatSidenav} from "@angular/material/sidenav";
 import {ViewportRuler} from "@angular/cdk/overlay";
@@ -17,7 +17,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {UploadStateService} from "../../service/upload-state.service";
 import {FileItemDialogComponent} from "../file-item-dialog/file-item-dialog.component";
 import {HttpStatusCode} from "@angular/common/http";
-import {Subscription} from "rxjs";
+import {debounceTime, finalize, Subscription, switchMap, tap} from "rxjs";
 import {FileUpdateDialogComponent} from "../file-update-dialog/file-update-dialog.component";
 import {FiltersDialogComponent} from "../filters-dialog/filters-dialog.component";
 import {FormControl} from "@angular/forms";
@@ -31,6 +31,7 @@ import {FormControl} from "@angular/forms";
 export class DashboardComponent implements OnInit {
 
   @ViewChild('snav') snav!: MatSidenav;
+  @ViewChild('auto', {static: true}) auto!: ElementRef;
 
   wasTriggered: boolean = false;
   mobileQuery!: MediaQueryList;
@@ -63,7 +64,8 @@ export class DashboardComponent implements OnInit {
               private router: Router,
               private jwtService: JwtHelperService,
               private snackBar: MatSnackBar,
-              private uploadStateService: UploadStateService
+              private uploadStateService: UploadStateService,
+              private renderer: Renderer2
   ) {
     this.isLoading = true;
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
@@ -83,7 +85,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc);
 
     let jwt = localStorage.getItem("ocl-jwt");
@@ -94,6 +95,41 @@ export class DashboardComponent implements OnInit {
     div.addEventListener('scroll', () => {
       this.windowScrolled = div.scrollTop >= 100;
     })
+
+
+    this.searchFileControl.valueChanges
+      .pipe(
+        debounceTime(500),
+        tap(() => {
+          this.isLoading = true;
+        }),
+        switchMap(value => this.findByKeyword(value)
+          .pipe(
+            finalize(() => {
+              this.isLoading = false
+            }),
+          )
+        )
+      )
+      .subscribe(data => {
+        if (data.length == 0) {
+          this.loadedFiles = [];
+        } else {
+          data.forEach(fdata => {
+            if (fdata.fileType === FileType.IMAGE ||
+              fdata.fileType === FileType.VIDEO ||
+              fdata.fileType === FileType.PDF)
+              fdata.isMedia = true;
+          })
+          this.loadedFiles = data;
+        }
+
+      });
+
+  }
+
+  private findByKeyword(value: string) {
+    return this.fileService.findAllByKeyword(value);
   }
 
   onWindowScroll($event: IInfiniteScrollEvent) {
@@ -333,7 +369,7 @@ export class DashboardComponent implements OnInit {
 
           fileData.content.forEach(fdata => {
             if (fdata.fileType === FileType.IMAGE ||
-              fdata.fileType === FileType.VIDEO||
+              fdata.fileType === FileType.VIDEO ||
               fdata.fileType === FileType.PDF)
               fdata.isMedia = true;
 
@@ -353,5 +389,10 @@ export class DashboardComponent implements OnInit {
       top: 0,
       left: 0
     });
+  }
+
+  shouldNotShow() {
+    console.log("Is loading ? ", this.isLoading);
+    return this.isLoading;
   }
 }
