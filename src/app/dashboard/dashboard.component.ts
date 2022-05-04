@@ -10,7 +10,7 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {FileUploadDialogComponent} from "../file-upload-dialog/file-upload-dialog.component";
 import {UploadLoadingDialogComponent} from "../upload-loading-dialog/upload-loading-dialog.component";
 import {FileInfo} from "../../datamodel/FileInfo";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {FileType} from "../../utils/FileType";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -21,6 +21,9 @@ import {debounceTime, finalize, Subscription, switchMap, tap} from "rxjs";
 import {FileUpdateDialogComponent} from "../file-update-dialog/file-update-dialog.component";
 import {FiltersDialogComponent} from "../filters-dialog/filters-dialog.component";
 import {FormControl} from "@angular/forms";
+import {DirectoryCreateDialogComponent} from "../directory-create-dialog/directory-create-dialog.component";
+import {DirectoryService} from "../../service/directory.service";
+import {DirectoryInfo} from "../../datamodel/DirectoryInfo";
 
 
 @Component({
@@ -36,13 +39,18 @@ export class DashboardComponent implements OnInit {
   wasTriggered: boolean = false;
   mobileQuery!: MediaQueryList;
   loadingDialogRef!: MatDialogRef<UploadLoadingDialogComponent>;
-  loadedFiles: FileInfo[] = [];
+
+  files: FileInfo[] = [];
+  directories:DirectoryInfo[] = [];
+
   userEmail!: string;
   fileUploadSubscription!: Subscription;
 
   lastAdded!: FileInfo;
   sortBy: string = 'lastModified';
   asc: boolean = false;
+
+  currentPaths: string[] = []; //root
 
   currentPage: number = 0;
 
@@ -65,7 +73,9 @@ export class DashboardComponent implements OnInit {
               private jwtService: JwtHelperService,
               private snackBar: MatSnackBar,
               private uploadStateService: UploadStateService,
-              private renderer: Renderer2
+              private renderer: Renderer2,
+              private activeRoute: ActivatedRoute,
+              private directoryService: DirectoryService
   ) {
     this.isLoading = true;
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
@@ -87,9 +97,13 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc);
 
+    this.loadDirectoriesByPath();
+
     let jwt = localStorage.getItem("ocl-jwt");
     let decodedToken = this.jwtService.decodeToken(jwt as string);
     this.userEmail = decodedToken.sub;
+
+
 
     let div = document.getElementsByClassName("infinite-container")[0];
     div.addEventListener('scroll', () => {
@@ -113,7 +127,7 @@ export class DashboardComponent implements OnInit {
       )
       .subscribe(data => {
         if (data.length == 0) {
-          this.loadedFiles = [];
+          this.files = [];
         } else {
           data.forEach(fdata => {
             if (fdata.fileType === FileType.IMAGE ||
@@ -121,7 +135,7 @@ export class DashboardComponent implements OnInit {
               fdata.fileType === FileType.PDF)
               fdata.isMedia = true;
           })
-          this.loadedFiles = data;
+          this.files = data;
         }
 
       });
@@ -218,7 +232,7 @@ export class DashboardComponent implements OnInit {
         result => {
           if (result) {
             if (this.lastAdded !== result) {
-              this.loadedFiles.push(result);
+              this.files.push(result);
               this.lastAdded = result;
             }
           }
@@ -275,7 +289,13 @@ export class DashboardComponent implements OnInit {
 
   onFileItemClick(file: FileInfo) {
     let matDialogRef = this.dialog.open(FileItemDialogComponent, {
-      data: file
+      data: file,
+      width: '100vw',
+      maxWidth: '100vw',
+      height: '100vh',
+      maxHeight: '100vh',
+      hasBackdrop: false,
+      panelClass: 'file-item-dialog'
     });
 
     matDialogRef.afterClosed()
@@ -302,7 +322,7 @@ export class DashboardComponent implements OnInit {
     this.fileService.deleteFileById(id)
       .subscribe(response => {
         if (response.status === HttpStatusCode.Ok) {
-          this.loadedFiles = this.loadedFiles.filter(fileInfo => fileInfo.id !== id)
+          this.files = this.files.filter(fileInfo => fileInfo.id !== id)
         }
       });
   }
@@ -333,7 +353,7 @@ export class DashboardComponent implements OnInit {
         this.asc = result.asc;
 
         this.currentPage = 0; //reset
-        this.loadedFiles = [];
+        this.files = [];
 
         this.loadAllInitialFilesPaginated(this.sortBy, this.currentPage, 100, this.asc)
       })
@@ -349,10 +369,9 @@ export class DashboardComponent implements OnInit {
             fdata.fileType === FileType.PDF)
             fdata.isMedia = true;
 
-          this.loadedFiles.push(fdata);
+          this.files.push(fdata);
         })
 
-        console.log("files : ", this.loadedFiles)
         if (!fileData.last)
           this.currentPage = fileData.pageable.pageNumber + 1;
         this.isRequestMade = true;
@@ -373,11 +392,11 @@ export class DashboardComponent implements OnInit {
               fdata.fileType === FileType.PDF)
               fdata.isMedia = true;
 
-            this.loadedFiles.push(fdata);
+            this.files.push(fdata);
           })
 
           this.currentPage = fileData.pageable.pageNumber + 1;
-          console.log("pushed files : ", this.loadedFiles)
+          console.log("pushed files : ", this.files)
         }
       })
   }
@@ -394,5 +413,40 @@ export class DashboardComponent implements OnInit {
   shouldNotShow() {
     console.log("Is loading ? ", this.isLoading);
     return this.isLoading;
+  }
+
+  addDirectory() {
+    this.dialog.open(DirectoryCreateDialogComponent)
+      .afterClosed()
+      .subscribe(result => {
+        if (!result) {
+          this.snackBar.open("Directory must have a name", 'Close', {
+            duration: 2000,
+            panelClass: ['mat-toolbar', 'mat-warn']
+          })
+        }
+
+        this.directoryService.createDirectory(result, this.currentPaths)
+          .subscribe(response => {
+            console.log("THE RESPONSE OF CR DIR : ", response)
+          })
+
+      });
+  }
+
+  private loadDirectoriesByPath() {
+    this.directoryService.getAllDirectories(this.currentPaths)
+      .subscribe(response=>{
+        console.log("LOCAL PATH : ");
+        console.log(this.currentPaths)
+        console.log(response)
+        this.directories = response;
+        if (response)
+        this.currentPaths.push()
+      })
+  }
+
+  onDirClick(dir: DirectoryInfo) {
+    console.log("DIR CLICKED")
   }
 }

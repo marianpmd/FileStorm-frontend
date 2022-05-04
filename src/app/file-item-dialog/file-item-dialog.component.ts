@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FileInfo} from "../../datamodel/FileInfo";
 import {computeFileSize} from "../../utils/Common";
 import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
@@ -13,7 +13,7 @@ import {DomSanitizer} from "@angular/platform-browser";
   styleUrls: ['./file-item-dialog.component.scss']
 })
 export class FileItemDialogComponent implements OnInit {
-  isMedia: boolean = true;
+  isMedia!: boolean;
   progressMode: ProgressSpinnerMode = 'indeterminate';
   isLoaded: boolean = false;
   source!: any;
@@ -21,15 +21,16 @@ export class FileItemDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: FileInfo,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private dialogRef: MatDialogRef<FileItemDialogComponent>
   ) {
   }
 
   ngOnInit(): void {
     console.log("IS MEDIA >? ")
     console.log(this.data.isMedia)
-    if (this.data.isMedia) {
-
+    this.isMedia = this.data.isMedia;
+    if (this.isMedia) {
       this.fileService.getByFileId(this.data.id)
         .subscribe({
           next: (response) => {
@@ -57,5 +58,13 @@ export class FileItemDialogComponent implements OnInit {
     let blob = new Blob([source]);
     const unsafeURL = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(unsafeURL);
+  }
+
+  stopPropagation($event: MouseEvent) {
+    $event.stopPropagation();
+  }
+
+  onBackgroundClick($event: MouseEvent) {
+    this.dialogRef.close();
   }
 }

@@ -1,10 +1,24 @@
-<div class="main">
-  <h2 mat-dialog-title>Download or delete file.</h2>
+<div class="main" >
+  <div class="mat-app-background mat-elevation-z8 header">
+    <div class="texts">
+      <p mat-dialog-title>{{data.name}}</p>
+      <p>Size : {{computeFileSize(data.size)}}</p>
+    </div>
+    <mat-dialog-actions class="buttons">
+      <button mat-mini-fab [mat-dialog-close]="'download'" class="download-button" cdkFocusInitial>
+        <mat-icon>download</mat-icon>
+      </button>
+      <button mat-mini-fab [mat-dialog-close]="'delete'" class="delete-button" cdkFocusInitial>
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-mini-fab [mat-dialog-close]="" class="cancel-button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-dialog-actions>
+  </div>
   <mat-dialog-content class="mat-typography">
-    <p class="filename">Filename : {{data.name}}</p>
-    <p>Size : {{computeFileSize(data.size)}}</p>
     <div class="content">
-      <mat-progress-spinner *ngIf="!isLoaded && !isMedia" [mode]="progressMode"></mat-progress-spinner>
+      <mat-progress-spinner *ngIf="!isLoaded && isMedia" [mode]="progressMode"></mat-progress-spinner>
       <p class="no-prev-message" *ngIf="!isMedia || data.isMedia === undefined">No preview available.</p>
       <pdf-viewer *ngIf="isLoaded && isMedia && isPdf(data.fileType)"
                   [src]="source"
@@ -22,9 +36,4 @@
              alt="image"></div>
     </div>
   </mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="'download'" class="download-button" cdkFocusInitial>Download</button>
-    <button mat-button [mat-dialog-close]="'delete'" class="delete-button" cdkFocusInitial>Delete</button>
-    <button mat-mini-fab [mat-dialog-close]="" class="cancel-button">x</button>
-  </mat-dialog-actions>
 </div>

@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Create a new directory</h2>
+<mat-dialog-content class="main">
+  <mat-form-field>
+    <mat-label>Directory Name</mat-label>
+    <input matInput [(ngModel)]="dirName" (keydown.enter)="onSubmit()">
+  </mat-form-field>
+  <mat-dialog-actions>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!dirName"
+    >Create</button>
+  </mat-dialog-actions>
+</mat-dialog-content>

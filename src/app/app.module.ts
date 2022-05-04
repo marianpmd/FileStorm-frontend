@@ -43,6 +43,7 @@ import {NgxScrollTopModule} from 'ngx-scrolltop';
 import {GoTopButtonModule} from "ng-go-top-button";
 import {PdfViewerModule} from "ng2-pdf-viewer";
 import {MatMenuModule} from "@angular/material/menu";
+import { DirectoryCreateDialogComponent } from './directory-create-dialog/directory-create-dialog.component';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import {MatMenuModule} from "@angular/material/menu";
     FileItemDialogComponent,
     FileUpdateDialogComponent,
     FiltersDialogComponent,
+    DirectoryCreateDialogComponent,
   ],
   imports: [
     BrowserModule,

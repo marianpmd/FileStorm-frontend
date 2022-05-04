@@ -8,7 +8,7 @@
           <button (click)="uploaderAction(uploader)" mat-menu-item>
             <mat-icon>upload_file</mat-icon>File
           </button>
-          <button mat-menu-item>
+          <button mat-menu-item (click)="addDirectory()">
             <mat-icon>create_new_folder</mat-icon>Directory
           </button>
         </mat-menu>
@@ -45,8 +45,8 @@
     [infiniteScrollDistance]="1"
     (scrolled)="onWindowScroll($event)">
 
-    <div class="no-files-container" *ngIf="loadedFiles.length === 0 || !loadedFiles">
-      <p *ngIf="loadedFiles.length === 0 && isRequestMade" class="no-files-message">No files to show.
+    <div class="no-files-container" *ngIf="files.length === 0 || !files">
+      <p *ngIf="files.length === 0 && isRequestMade" class="no-files-message">No files to show.
         To upload a file either drag and drop it here, or us the '+' sign in the left side menu.</p>
     </div>
 
@@ -58,7 +58,7 @@
         <div [class.show]="isLoading" class="filtering-section">
 
           <mat-form-field>
-            <input #auto autofocus class="search-bar" matInput placeholder="Search" aria-label="State"
+            <input #auto class="search-bar" matInput placeholder="Search" aria-label="State"
                    [formControl]="searchFileControl">
           </mat-form-field>
 
@@ -68,6 +68,16 @@
 
         </div>
 
+        <section *ngIf="!isLoading">
+          <div class="directory-div">
+            <div class="file-item" matRipple (click)="onDirClick(dir)" *ngFor="let dir of directories">
+              <mat-icon class="icon" color="primary">folder</mat-icon>
+              <mat-divider></mat-divider>
+              <p class="filename">{{dir.name}}</p>
+            </div>
+          </div>
+        </section>
+
         <div class="isLoading" *ngIf="isLoading">
           <mat-progress-spinner class="spinner" color="primary" mode="indeterminate"></mat-progress-spinner>
         </div>
@@ -75,7 +85,7 @@
 
         <section class="files-container" *ngIf="!isLoading">
 
-          <div class="file-item" matRipple (click)="onFileItemClick(file)" *ngFor="let file of loadedFiles">
+          <div class="file-item" matRipple (click)="onFileItemClick(file)" *ngFor="let file of files">
             <mat-icon class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
             <mat-divider></mat-divider>
             <p class="filename">{{file.name}}</p>
