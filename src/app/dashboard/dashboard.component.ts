@@ -219,7 +219,7 @@ export class DashboardComponent implements OnInit {
 
   private startActualUpload(files: File[], shouldUpload: boolean) {
     this.loadingDialogRef = this.dialog.open(UploadLoadingDialogComponent, {
-      data: {files: files, shouldUpdate: shouldUpload},
+      data: {files: files, shouldUpdate: shouldUpload, pathFromRoot: this.currentPaths},
       hasBackdrop: false,
       position: {
         right: "true",
@@ -441,8 +441,6 @@ export class DashboardComponent implements OnInit {
         console.log(this.currentPaths)
         console.log(response)
         this.directories = response;
-        if (response)
-        this.currentPaths.push()
       })
   }
 

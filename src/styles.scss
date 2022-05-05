@@ -74,3 +74,12 @@ body {
   padding: 0 0 5px;
   background: rgba(0, 0, 0, 0.56);
 }
+
+.directory-div::-webkit-scrollbar{
+  height: 5px;
+}
+
+.directory-div::-webkit-scrollbar-track{
+  background: none;
+}
+

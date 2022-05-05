@@ -6,6 +6,7 @@ import {FileUploadInfo} from "../../datamodel/FileUploadInfo";
 import {UploadState} from "../../utils/UploadState";
 import {UploadStateService} from "../../service/upload-state.service";
 import {ProgressBarMode} from "@angular/material/progress-bar";
+import {FileType} from "../../utils/FileType";
 
 @Component({
   selector: 'app-upload-loading-dialog',
@@ -18,7 +19,7 @@ export class UploadLoadingDialogComponent implements OnInit {
   public allFiles: Map<File, FileUploadInfo> = new Map<File, FileUploadInfo>();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { files: File[], shouldUpdate: boolean },
+    @Inject(MAT_DIALOG_DATA) private data: { files: File[], shouldUpdate: boolean, pathFromRoot: string[] },
     private dialogRef: MatDialogRef<UploadLoadingDialogComponent>,
     private fileService: FileService,
     private uploadStateService: UploadStateService,
@@ -27,7 +28,7 @@ export class UploadLoadingDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.data.files.forEach(actualFile => {
-      this.fileService.uploadFile(actualFile, this.data.shouldUpdate)
+      this.fileService.uploadFile(actualFile,this.data.pathFromRoot, this.data.shouldUpdate)
         .subscribe(
           (next: any) => {
             this.progressBarMode = 'determinate';
@@ -53,7 +54,14 @@ export class UploadLoadingDialogComponent implements OnInit {
               } else if (next.type === HttpEventType.Response) {
                 let fileUploadInfo = this.allFiles.get(actualFile);
                 fileUploadInfo!.uploadState = UploadState.DONE;
-                this.uploadStateService.setFileInfo(next.body);
+
+                let fileInfo = next.body;
+                if (fileInfo.fileType === FileType.IMAGE ||
+                  fileInfo.fileType === FileType.VIDEO ||
+                  fileInfo.fileType === FileType.PDF)
+                  fileInfo.isMedia = true;
+
+                this.uploadStateService.setFileInfo(fileInfo);
               }
             }
           },

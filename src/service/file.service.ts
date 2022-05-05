@@ -19,10 +19,14 @@ export class FileService {
   constructor(private http: HttpClient) {
   }
 
-  uploadFile(file: File, shouldUpdate?: boolean) {
+  uploadFile(file: File, pathFromRoot: string[], shouldUpdate?: boolean) {
     const formData = new FormData()
-    const headers = new HttpHeaders({ 'ngsw-bypass': ''});
+    const headers = new HttpHeaders({'ngsw-bypass': ''});
+
     formData.append('file', file);
+    for (let path of pathFromRoot) {
+      formData.append('pathFromRoot', path)
+    }
 
     if (shouldUpdate) {
       formData.append("shouldUpdate", shouldUpdate as unknown as string);
@@ -107,18 +111,18 @@ export class FileService {
   }
 
   getByFileId(id: number) {
-    return this.http.get(DOWNLOAD_ONE_URL,{
+    return this.http.get(DOWNLOAD_ONE_URL, {
       responseType: 'arraybuffer' as 'json',
-      params : {
-        id : id
+      params: {
+        id: id
       }
     })
   }
 
-  findAllByKeyword(value : string) {
-    return this.http.get<FileInfo[]>(LOAD_BY_KEYWORD,{
-      params:{
-        keyword : value
+  findAllByKeyword(value: string) {
+    return this.http.get<FileInfo[]>(LOAD_BY_KEYWORD, {
+      params: {
+        keyword: value
       }
     })
   }

@@ -68,12 +68,12 @@
 
         </div>
 
-        <section *ngIf="!isLoading">
+        <section class="directory-section mat-elevation-z10"  *ngIf="!isLoading" >
           <div class="directory-div">
-            <div class="file-item" matRipple (click)="onDirClick(dir)" *ngFor="let dir of directories">
-              <mat-icon class="icon" color="primary">folder</mat-icon>
-              <mat-divider></mat-divider>
-              <p class="filename">{{dir.name}}</p>
+            <div matRipple class="dir-item" (click)="onDirClick(dir)" *ngFor="let dir of directories">
+              <mat-icon mat-list-icon>folder</mat-icon>
+              <div mat-line>{{dir.name}}</div>
+<!--              <p class="dirname">{{dir.name}}</p>-->
             </div>
           </div>
         </section>
