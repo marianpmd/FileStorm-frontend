@@ -5,7 +5,7 @@ import {computeFileSize} from "../../utils/Common";
 import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
 import {FileService} from "../../service/file.service";
 import {FileType} from "../../utils/FileType";
-import {DomSanitizer} from "@angular/platform-browser";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-file-item-dialog',
@@ -17,6 +17,7 @@ export class FileItemDialogComponent implements OnInit {
   progressMode: ProgressSpinnerMode = 'indeterminate';
   isLoaded: boolean = false;
   source!: any;
+  sourceUrl!:SafeUrl
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: FileInfo,
@@ -30,11 +31,13 @@ export class FileItemDialogComponent implements OnInit {
     console.log("IS MEDIA >? ")
     console.log(this.data.isMedia)
     this.isMedia = this.data.isMedia;
+
     if (this.isMedia) {
       this.fileService.getByFileId(this.data.id)
         .subscribe({
           next: (response) => {
             this.source = response;
+            if (this.source) this.sourceUrl = this.sourceAsBlob(this.source);
             this.isLoaded = true;
           }
         });
@@ -53,8 +56,11 @@ export class FileItemDialogComponent implements OnInit {
     return fileType === FileType.IMAGE
   }
 
+  isVideo(fileType: string) {
+    return fileType === FileType.VIDEO
+  }
+
   sourceAsBlob(source: any) {
-    console.log("IS IMAGE")
     let blob = new Blob([source]);
     const unsafeURL = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(unsafeURL);
@@ -62,9 +68,5 @@ export class FileItemDialogComponent implements OnInit {
 
   stopPropagation($event: MouseEvent) {
     $event.stopPropagation();
-  }
-
-  onBackgroundClick($event: MouseEvent) {
-    this.dialogRef.close();
   }
 }

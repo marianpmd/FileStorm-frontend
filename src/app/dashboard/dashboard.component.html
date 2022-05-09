@@ -70,10 +70,15 @@
 
         <section class="directory-section mat-elevation-z10"  *ngIf="!isLoading" >
           <div class="directory-div">
+            <p *ngIf="directories.length === 0 && !prevDir"
+              style="width: 100%; text-align:center">No directories created.</p>
+            <div matRipple class="dir-item" *ngIf="prevDir" (click)="onParentClick()">
+              <mat-icon mat-list-icon>drive_file_move_rtl</mat-icon>
+              <div mat-line>{{prevDir.name}}</div>
+            </div>
             <div matRipple class="dir-item" (click)="onDirClick(dir)" *ngFor="let dir of directories">
               <mat-icon mat-list-icon>folder</mat-icon>
               <div mat-line>{{dir.name}}</div>
-<!--              <p class="dirname">{{dir.name}}</p>-->
             </div>
           </div>
         </section>
@@ -87,6 +92,9 @@
 
           <div class="file-item" matRipple (click)="onFileItemClick(file)" *ngFor="let file of files">
             <mat-icon class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
+            <mat-progress-bar *ngIf="file.isDownloading"
+                              [color]="updateColor(file.downloadedAmount)"
+                              [value]="file.downloadedAmount" ></mat-progress-bar>
             <mat-divider></mat-divider>
             <p class="filename">{{file.name}}</p>
           </div>

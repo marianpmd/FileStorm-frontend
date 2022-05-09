@@ -1,4 +1,4 @@
-<div class="main" >
+<div class="main">
   <div class="mat-app-background mat-elevation-z8 header">
     <div class="texts">
       <p mat-dialog-title>{{data.name}}</p>
@@ -29,11 +29,23 @@
 
       ></pdf-viewer>
 
-      <div class="image-container">
-        <img *ngIf="isLoaded && isMedia && isImage(data.fileType)"
-             [src]="sourceAsBlob(source)"
-             class="image-resource mat-elevation-z8"
-             alt="image"></div>
+      <div class="image-container"
+           *ngIf="isLoaded && isMedia && isImage(data.fileType)">
+        <img
+          [src]="sourceAsBlob(source)"
+          class="image-resource mat-elevation-z8"
+          alt="image">
+      </div>
+
+
+      <div class="video-container" *ngIf=" isLoaded && isMedia && isVideo(data.fileType)">
+        <video *ngIf="sourceUrl" id="video"
+               [src]="sourceUrl"
+               autoplay
+               controls>
+        </video>
+      </div>
+
     </div>
   </mat-dialog-content>
 </div>

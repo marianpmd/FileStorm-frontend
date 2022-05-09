@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpEventType, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "../environments/environment";
 import {Observable, tap} from "rxjs";
 import {FileInfo, FileInfoPaged} from "../datamodel/FileInfo";
@@ -21,12 +21,16 @@ export class FileService {
 
   uploadFile(file: File, pathFromRoot: string[], shouldUpdate?: boolean) {
     const formData = new FormData()
+    let httpParams = new HttpParams();
+    if (pathFromRoot.length === 0)
+    httpParams = httpParams.set('pathFromRoot','');
+
+    for (let path of pathFromRoot) {
+      httpParams = httpParams.append('pathFromRoot',path);
+    }
     const headers = new HttpHeaders({'ngsw-bypass': ''});
 
     formData.append('file', file);
-    for (let path of pathFromRoot) {
-      formData.append('pathFromRoot', path)
-    }
 
     if (shouldUpdate) {
       formData.append("shouldUpdate", shouldUpdate as unknown as string);
@@ -36,19 +40,24 @@ export class FileService {
       reportProgress: true,
       responseType: 'json',
       observe: 'events',
-      headers: headers
+      headers: headers,
+      params : httpParams
     });
   }
 
-  loadAllFiles(sortBy: string, page: number, size: number, asc: boolean): Observable<FileInfoPaged> {
-    return this.http.get<FileInfoPaged>(LOAD_ALL_URL, {
-      params: {
-        sortBy: sortBy,
-        page: page,
-        size: size,
-        asc: asc
-      }
-    });
+  loadAllFiles(sortBy: string, page: number, size: number, asc: boolean, currentPaths: string[]): Observable<FileInfoPaged> {
+    let params = new HttpParams();
+    params = params.set("sortBy", sortBy);
+    params = params.set("page", page);
+    params = params.set("size", size);
+    params = params.set("asc", asc);
+    if (currentPaths.length === 0) params = params.set("pathFromRoot",'');
+
+    for (let currentPath of currentPaths) {
+      params = params.append("pathFromRoot",currentPath);
+    }
+
+    return this.http.get<FileInfoPaged>(LOAD_ALL_URL, {params});
   }
 
   downloadFileById(fileId: number) {
@@ -60,31 +69,39 @@ export class FileService {
       },
       headers: headers,
       responseType: "blob" as "json",
-      observe: "response",
+      reportProgress : true,
+      observe: "events",
       withCredentials: true
-    }).pipe(
-      tap((response: any) => {
-        const dataType = response.type;
-        const fileName = FileService.getFileNameFromContentDisposition(response.headers.get('Content-Disposition'));
+    })
+    //
+    //
+    //   .pipe(
+    //   tap((response: any) => {
+    //     const dataType = response.type;
+    //     const fileName = FileService.getFileNameFromContentDisposition(response.headers.get('Content-Disposition'));
+    //
+    //     const binaryData: any = [];
+    //     const downloadLink: HTMLAnchorElement = document.createElement('a');
+    //
+    //     binaryData.push(response.body);
+    //
+    //     downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
+    //     console.log("THE DOWNLOAD LINK");
+    //     console.log(downloadLink);
+    //     downloadLink.download = fileName;
+    //
+    //     document.body.appendChild(downloadLink);
+    //     downloadLink.click();
+    //
+    //     window.URL.revokeObjectURL(downloadLink.href);
+    //     downloadLink.remove();
+    //   })
+    // )
 
-        const binaryData: any = [];
-        const downloadLink: HTMLAnchorElement = document.createElement('a');
 
-        binaryData.push(response.body);
-
-        downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
-        downloadLink.download = fileName;
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-
-        window.URL.revokeObjectURL(downloadLink.href);
-        downloadLink.remove();
-      })
-    )
   }
 
-  private static getFileNameFromContentDisposition(contentDispositionVal: string): string {
+  static getFileNameFromContentDisposition(contentDispositionVal: string | null): string {
     // @ts-ignore
     let fileNameFull = contentDispositionVal.match(/filename=((["]).*?\2|[^;\n]*)/g)[0];
 
@@ -102,11 +119,19 @@ export class FileService {
     });
   }
 
-  checkFileByName(name: string) {
+  checkFileByName(filename: string, currentPaths: string[]) {
+
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('filename',filename);
+
+    if (currentPaths.length === 0) httpParams = httpParams.set("pathFromRoot",'');
+
+    for (let path of currentPaths) {
+      httpParams = httpParams.append('pathFromRoot',path);
+    }
+
     return this.http.get<boolean>(CHECK_FILE_URL, {
-      params: {
-        filename: name
-      }
+      params: httpParams
     });
   }
 

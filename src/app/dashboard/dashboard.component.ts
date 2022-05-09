@@ -16,7 +16,7 @@ import {FileType} from "../../utils/FileType";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UploadStateService} from "../../service/upload-state.service";
 import {FileItemDialogComponent} from "../file-item-dialog/file-item-dialog.component";
-import {HttpStatusCode} from "@angular/common/http";
+import {HttpEvent, HttpEventType, HttpStatusCode} from "@angular/common/http";
 import {debounceTime, finalize, Subscription, switchMap, tap} from "rxjs";
 import {FileUpdateDialogComponent} from "../file-update-dialog/file-update-dialog.component";
 import {FiltersDialogComponent} from "../filters-dialog/filters-dialog.component";
@@ -24,6 +24,7 @@ import {FormControl} from "@angular/forms";
 import {DirectoryCreateDialogComponent} from "../directory-create-dialog/directory-create-dialog.component";
 import {DirectoryService} from "../../service/directory.service";
 import {DirectoryInfo} from "../../datamodel/DirectoryInfo";
+import {saveAs} from "file-saver";
 
 
 @Component({
@@ -41,7 +42,8 @@ export class DashboardComponent implements OnInit {
   loadingDialogRef!: MatDialogRef<UploadLoadingDialogComponent>;
 
   files: FileInfo[] = [];
-  directories:DirectoryInfo[] = [];
+  prevDir!: DirectoryInfo | null;
+  directories: DirectoryInfo[] = [];
 
   userEmail!: string;
   fileUploadSubscription!: Subscription;
@@ -95,14 +97,13 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc);
+    this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc, this.currentPaths);
 
     this.loadDirectoriesByPath();
 
     let jwt = localStorage.getItem("ocl-jwt");
     let decodedToken = this.jwtService.decodeToken(jwt as string);
     this.userEmail = decodedToken.sub;
-
 
 
     let div = document.getElementsByClassName("infinite-container")[0];
@@ -148,9 +149,9 @@ export class DashboardComponent implements OnInit {
 
   onWindowScroll($event: IInfiniteScrollEvent) {
     console.log("TRIGGER LOAD")
-    console.log($event.currentScrollPosition)
+    console.log("page : ", this.currentPage)
 
-    this.loadFilesAndAppend(this.sortBy, this.currentPage, 100, this.asc);
+    this.loadFilesAndAppend(this.sortBy, this.currentPage, 100, this.asc, this.currentPaths);
   }
 
   async onFileDrop(files: NgxFileDropEntry[]) {
@@ -202,13 +203,13 @@ export class DashboardComponent implements OnInit {
       .subscribe(async result => {
         if (!result) return;
 
-        let anyFileExists = await this.checkIfAnyFileExists(files);
+        let anyFileExists = await this.checkIfAnyFileExists(files, this.currentPaths);
         if (anyFileExists) {
           console.log("Found a file that exists")
           let fileAlreadyExistsDialogRef = this.dialog.open(FileUpdateDialogComponent);
           fileAlreadyExistsDialogRef.afterClosed()
             .subscribe(result => {
-              if (result == undefined) return;
+              if (!result) return;
               this.startActualUpload(files, true);
             })
         } else {
@@ -241,10 +242,10 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  private async checkIfAnyFileExists(files: File[]) {
+  private async checkIfAnyFileExists(files: File[], currentPaths: string[]) {
     for (const file of files) {
       console.log("Checking file : ", file)
-      let res = await this.checkOneFile(file);
+      let res = await this.checkOneFile(file, currentPaths);
       if (res === true) {
         return true;
       }
@@ -253,9 +254,9 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  private async checkOneFile(file: File) {
+  private async checkOneFile(file: File, currentPaths: string[]) {
     return new Promise((resolve => {
-      this.fileService.checkFileByName(file.name)
+      this.fileService.checkFileByName(file.name, currentPaths)
         .subscribe(exists => {
           resolve(exists);
         })
@@ -313,9 +314,38 @@ export class DashboardComponent implements OnInit {
 
   private downloadFileById(id: number) {
     this.fileService.downloadFileById(id)
-      .subscribe(response => {
-
+      .subscribe(event => {
+        this.handleDownloadEvents(event,id);
       });
+  }
+
+  private handleDownloadEvents(event: HttpEvent<Object>, fileId: number) {
+    if (event.type === HttpEventType.DownloadProgress) {
+      console.log("download progress");
+      let fileInfo = this.files.filter(file=>file.id === fileId)[0];
+      if (!fileInfo) return;
+      let progress = Math.round(100 * event.loaded / fileInfo.size);
+      console.log("loaded " , event.loaded)
+      console.log("total " , fileInfo.size)
+      console.log("progress : ", progress)
+      fileInfo.isDownloading = true;
+      fileInfo.downloadedAmount = progress;
+    }
+    if (event.type === HttpEventType.Response) {
+      event = (<HttpEvent<Response>>event)
+      let fileInfo = this.files.filter(file=>file.id === fileId)[0];
+      if (fileInfo)
+      fileInfo.isDownloading = false;
+      console.log("FINAL")
+      console.log(event)
+      const dataType = event.type;
+      // @ts-ignore
+      const fileName = FileService.getFileNameFromContentDisposition(event.headers.get('Content-Disposition'));
+
+      // @ts-ignore
+      let blob = new Blob([event.body]);
+      saveAs(blob, fileName);
+    }
   }
 
   private deleteFileById(id: number) {
@@ -355,13 +385,13 @@ export class DashboardComponent implements OnInit {
         this.currentPage = 0; //reset
         this.files = [];
 
-        this.loadAllInitialFilesPaginated(this.sortBy, this.currentPage, 100, this.asc)
+        this.loadAllInitialFilesPaginated(this.sortBy, this.currentPage, 100, this.asc, this.currentPaths)
       })
   }
 
 
-  private loadAllInitialFilesPaginated(sortBy: string, page: number, size: number, asc: boolean) {
-    this.fileService.loadAllFiles(sortBy, page, size, asc)
+  private loadAllInitialFilesPaginated(sortBy: string, page: number, size: number, asc: boolean, currentPaths: string[]) {
+    this.fileService.loadAllFiles(sortBy, page, size, asc, currentPaths)
       .subscribe(fileData => {
         fileData.content.forEach(fdata => {
           if (fdata.fileType === FileType.IMAGE ||
@@ -369,8 +399,8 @@ export class DashboardComponent implements OnInit {
             fdata.fileType === FileType.PDF)
             fdata.isMedia = true;
 
-          this.files.push(fdata);
         })
+        this.files = fileData.content;
 
         if (!fileData.last)
           this.currentPage = fileData.pageable.pageNumber + 1;
@@ -379,11 +409,11 @@ export class DashboardComponent implements OnInit {
       })
   }
 
-  private loadFilesAndAppend(sortBy: string, currentPage: number, size: number, asc: boolean) {
-    this.fileService.loadAllFiles(sortBy, currentPage, size, asc)
+  private loadFilesAndAppend(sortBy: string, currentPage: number, size: number, asc: boolean, currentPaths: string[]) {
+    this.fileService.loadAllFiles(sortBy, currentPage, size, asc, currentPaths)
       .subscribe(fileData => {
         console.log("calling append")
-        if (fileData.content.length !== 0) {
+        if (!fileData.last) {
           console.log("is not last")
 
           fileData.content.forEach(fdata => {
@@ -429,22 +459,46 @@ export class DashboardComponent implements OnInit {
         this.directoryService.createDirectory(result, this.currentPaths)
           .subscribe(response => {
             console.log("THE RESPONSE OF CR DIR : ", response)
+            this.directories.push(response);
           })
 
       });
   }
 
-  private loadDirectoriesByPath() {
+  loadDirectoriesByPath() {
     this.directoryService.getAllDirectories(this.currentPaths)
-      .subscribe(response=>{
+      .subscribe(response => {
         console.log("LOCAL PATH : ");
         console.log(this.currentPaths)
         console.log(response)
-        this.directories = response;
+
+        this.directories = response.directories
+        if (response.parent !== null) {
+          this.prevDir = response.parent;
+        } else {
+          this.prevDir = null;
+        }
       })
   }
 
   onDirClick(dir: DirectoryInfo) {
-    console.log("DIR CLICKED")
+    this.isLoading = true;
+    this.currentPaths.push(dir.name);
+    this.loadDirectoriesByPath();
+    this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc, this.currentPaths);
+
+  }
+
+  onParentClick() {
+    this.isLoading = true;
+    this.currentPaths.pop();
+    this.loadDirectoriesByPath();
+    this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc, this.currentPaths);
+  }
+
+
+  updateColor(downloadedAmount: number) {
+    if (downloadedAmount > 99) return 'accent';
+    return 'primary';
   }
 }

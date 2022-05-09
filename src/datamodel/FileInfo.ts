@@ -6,6 +6,8 @@ export interface FileInfo {
   fileType: string;
   isMedia: boolean;
   isLoaded: boolean;
+  isDownloading : boolean;
+  downloadedAmount:number;
 }
 
 export interface Sort {
