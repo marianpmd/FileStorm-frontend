@@ -6,7 +6,7 @@ import {FileInfo, FileInfoPaged} from "../datamodel/FileInfo";
 
 const UPLOAD_URL = environment.baseUrl + '/file/upload';
 const LOAD_ALL_URL = environment.baseUrl + '/file/all';
-const DOWNLOAD_ONE_URL = environment.baseUrl + '/file/one';
+export const DOWNLOAD_ONE_URL = environment.baseUrl + '/file/one';
 const DELETE_ONE_URL = environment.baseUrl + '/file/delete/one';
 const CHECK_FILE_URL = environment.baseUrl + '/file/check';
 const LOAD_BY_KEYWORD = environment.baseUrl + '/file/byKeyword';
@@ -73,32 +73,6 @@ export class FileService {
       observe: "events",
       withCredentials: true
     })
-    //
-    //
-    //   .pipe(
-    //   tap((response: any) => {
-    //     const dataType = response.type;
-    //     const fileName = FileService.getFileNameFromContentDisposition(response.headers.get('Content-Disposition'));
-    //
-    //     const binaryData: any = [];
-    //     const downloadLink: HTMLAnchorElement = document.createElement('a');
-    //
-    //     binaryData.push(response.body);
-    //
-    //     downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
-    //     console.log("THE DOWNLOAD LINK");
-    //     console.log(downloadLink);
-    //     downloadLink.download = fileName;
-    //
-    //     document.body.appendChild(downloadLink);
-    //     downloadLink.click();
-    //
-    //     window.URL.revokeObjectURL(downloadLink.href);
-    //     downloadLink.remove();
-    //   })
-    // )
-
-
   }
 
   static getFileNameFromContentDisposition(contentDispositionVal: string | null): string {

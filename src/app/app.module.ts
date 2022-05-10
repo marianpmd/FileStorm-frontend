@@ -28,23 +28,25 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatFileUploadModule} from "angular-material-fileupload";
 import {NgxFileDropModule} from "ngx-file-drop";
 import {XhrInterceptor} from "../interceptors/xhr.interceptor";
-import {FileUploadDialogComponent} from './file-upload-dialog/file-upload-dialog.component';
-import {UploadLoadingDialogComponent} from './upload-loading-dialog/upload-loading-dialog.component';
+import {FileUploadDialogComponent} from './dialogs/file-upload-dialog/file-upload-dialog.component';
+import {UploadLoadingDialogComponent} from './dialogs/upload-loading-dialog/upload-loading-dialog.component';
 import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
-import {FileItemDialogComponent} from './file-item-dialog/file-item-dialog.component';
+import {FileItemDialogComponent} from './dialogs/file-item-dialog/file-item-dialog.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatSelectModule} from "@angular/material/select";
-import {FileUpdateDialogComponent} from './file-update-dialog/file-update-dialog.component';
-import {FiltersDialogComponent} from './filters-dialog/filters-dialog.component';
+import {FileUpdateDialogComponent} from './dialogs/file-update-dialog/file-update-dialog.component';
+import {FiltersDialogComponent} from './dialogs/filters-dialog/filters-dialog.component';
 import {MatRadioModule} from "@angular/material/radio";
 import {NgxScrollTopModule} from 'ngx-scrolltop';
 import {GoTopButtonModule} from "ng-go-top-button";
 import {PdfViewerModule} from "ng2-pdf-viewer";
 import {MatMenuModule} from "@angular/material/menu";
-import {DirectoryCreateDialogComponent} from './directory-create-dialog/directory-create-dialog.component';
-import { FileDownloadDialogComponent } from './file-download-dialog/file-download-dialog.component';
+import {DirectoryCreateDialogComponent} from './dialogs/directory-create-dialog/directory-create-dialog.component';
+import {MatBadgeModule} from "@angular/material/badge";
+import { DirectoryDeleteDialogComponent } from './dialogs/directory-delete-dialog/directory-delete-dialog.component';
+
 
 
 @NgModule({
@@ -59,48 +61,49 @@ import { FileDownloadDialogComponent } from './file-download-dialog/file-downloa
     FileUpdateDialogComponent,
     FiltersDialogComponent,
     DirectoryCreateDialogComponent,
-    FileDownloadDialogComponent,
+    DirectoryDeleteDialogComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    MatListModule,
-    FormsModule,
-    MatCardModule,
-    MatRippleModule,
-    MatFormFieldModule,
-    MatInputModule,
-    HttpClientModule,
-    MatProgressSpinnerModule,
-    MatDialogModule,
-    MatSidenavModule,
-    ScrollingModule,
-    InfiniteScrollModule,
-    MatProgressBarModule,
-    MatFileUploadModule,
-    NgxFileDropModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    }),
-    MatAutocompleteModule,
-    MatSelectModule,
-    MatRadioModule,
-    NgxScrollTopModule,
-    GoTopButtonModule,
-    PdfViewerModule,
-    MatMenuModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSlideToggleModule,
+        MatSnackBarModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        MatListModule,
+        FormsModule,
+        MatCardModule,
+        MatRippleModule,
+        MatFormFieldModule,
+        MatInputModule,
+        HttpClientModule,
+        MatProgressSpinnerModule,
+        MatDialogModule,
+        MatSidenavModule,
+        ScrollingModule,
+        InfiniteScrollModule,
+        MatProgressBarModule,
+        MatFileUploadModule,
+        NgxFileDropModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: environment.production,
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
+        }),
+        MatAutocompleteModule,
+        MatSelectModule,
+        MatRadioModule,
+        NgxScrollTopModule,
+        GoTopButtonModule,
+        PdfViewerModule,
+        MatMenuModule,
+        MatBadgeModule
+    ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
     {provide: JWT_OPTIONS, useValue: JWT_OPTIONS}, JwtHelperService

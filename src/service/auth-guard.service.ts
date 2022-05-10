@@ -12,7 +12,7 @@ export class AuthGuardService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    let token = localStorage.getItem("ocl-jwt")
+    let token = this.cookieService.get("app-jwt")
 
     if (!token){
       this.router.navigate(['login']);

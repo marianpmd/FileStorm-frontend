@@ -1,10 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FileInfo} from "../../datamodel/FileInfo";
-import {computeFileSize} from "../../utils/Common";
+import {FileInfo} from "../../../datamodel/FileInfo";
+import {computeFileSize} from "../../../utils/Common";
 import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
-import {FileService} from "../../service/file.service";
-import {FileType} from "../../utils/FileType";
+import {FileService} from "../../../service/file.service";
+import {FileType} from "../../../utils/FileType";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({

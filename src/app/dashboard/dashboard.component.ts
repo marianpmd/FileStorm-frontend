@@ -1,30 +1,32 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, HostBinding, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {SidenavService} from "../../service/sidenav.service";
 import {MatSidenav} from "@angular/material/sidenav";
-import {ViewportRuler} from "@angular/cdk/overlay";
+import {OverlayContainer, ViewportRuler} from "@angular/cdk/overlay";
 import {IInfiniteScrollEvent} from "ngx-infinite-scroll";
 import {MediaMatcher} from "@angular/cdk/layout";
 import {FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
-import {FileService} from "../../service/file.service";
+import {DOWNLOAD_ONE_URL, FileService} from "../../service/file.service";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {FileUploadDialogComponent} from "../file-upload-dialog/file-upload-dialog.component";
-import {UploadLoadingDialogComponent} from "../upload-loading-dialog/upload-loading-dialog.component";
+import {FileUploadDialogComponent} from "../dialogs/file-upload-dialog/file-upload-dialog.component";
+import {UploadLoadingDialogComponent} from "../dialogs/upload-loading-dialog/upload-loading-dialog.component";
 import {FileInfo} from "../../datamodel/FileInfo";
 import {ActivatedRoute, Router} from "@angular/router";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {FileType} from "../../utils/FileType";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UploadStateService} from "../../service/upload-state.service";
-import {FileItemDialogComponent} from "../file-item-dialog/file-item-dialog.component";
+import {FileItemDialogComponent} from "../dialogs/file-item-dialog/file-item-dialog.component";
 import {HttpEvent, HttpEventType, HttpStatusCode} from "@angular/common/http";
 import {debounceTime, finalize, Subscription, switchMap, tap} from "rxjs";
-import {FileUpdateDialogComponent} from "../file-update-dialog/file-update-dialog.component";
-import {FiltersDialogComponent} from "../filters-dialog/filters-dialog.component";
+import {FileUpdateDialogComponent} from "../dialogs/file-update-dialog/file-update-dialog.component";
+import {FiltersDialogComponent} from "../dialogs/filters-dialog/filters-dialog.component";
 import {FormControl} from "@angular/forms";
-import {DirectoryCreateDialogComponent} from "../directory-create-dialog/directory-create-dialog.component";
+import {DirectoryCreateDialogComponent} from "../dialogs/directory-create-dialog/directory-create-dialog.component";
 import {DirectoryService} from "../../service/directory.service";
 import {DirectoryInfo} from "../../datamodel/DirectoryInfo";
 import {saveAs} from "file-saver";
+import {CookieService} from "ngx-cookie-service";
+import {DirectoryDeleteDialogComponent} from "../dialogs/directory-delete-dialog/directory-delete-dialog.component";
 
 
 @Component({
@@ -64,6 +66,8 @@ export class DashboardComponent implements OnInit {
   filteredFiles: FileInfo[] = [];
   windowScrolled: boolean = false;
 
+  @HostBinding('class') className = '';
+
 
   constructor(private sidenavService: SidenavService,
               private ruler: ViewportRuler,
@@ -77,7 +81,9 @@ export class DashboardComponent implements OnInit {
               private uploadStateService: UploadStateService,
               private renderer: Renderer2,
               private activeRoute: ActivatedRoute,
-              private directoryService: DirectoryService
+              private directoryService: DirectoryService,
+              private cookieService: CookieService,
+              private overlay: OverlayContainer,
   ) {
     this.isLoading = true;
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
@@ -86,6 +92,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private mobileQueryListener!: () => void;
+  toggleControl: FormControl = new FormControl(false);
 
   ngAfterViewInit() {
     this.sidenavService.setSidenav(this.snav);
@@ -96,12 +103,43 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  private initDarkToggle() {
+
+    if (localStorage.getItem("darkMode") === null) {
+      localStorage.setItem('darkMode', "off");
+    }
+
+    if (localStorage.getItem("darkMode") === "on") {
+      this.toggleControl.setValue(!this.toggleControl.value);
+      this.className = 'darkMode';
+      this.overlay.getContainerElement().classList.add(this.className);
+    } else if (localStorage.getItem("darkMode") === "off") {
+      this.className = '';
+      this.overlay.getContainerElement().classList.remove('darkMode');
+    }
+    this.toggleControl.valueChanges.subscribe((darkMode) => {
+      const darkClassName = 'darkMode';
+      console.log("called")
+
+      this.className = darkMode ? darkClassName : '';
+      if (darkMode) {
+        localStorage.setItem("darkMode", "on");
+        this.overlay.getContainerElement().classList.add(darkClassName);
+      } else {
+        localStorage.setItem("darkMode", "off");
+        this.overlay.getContainerElement().classList.remove(darkClassName);
+      }
+    });
+  }
+
   ngOnInit(): void {
+    this.initDarkToggle();
+
     this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc, this.currentPaths);
 
     this.loadDirectoriesByPath();
 
-    let jwt = localStorage.getItem("ocl-jwt");
+    let jwt = this.cookieService.get("app-jwt");
     let decodedToken = this.jwtService.decodeToken(jwt as string);
     this.userEmail = decodedToken.sub;
 
@@ -264,11 +302,8 @@ export class DashboardComponent implements OnInit {
   }
 
   onLogoutClick() {
-    let jwt = localStorage.getItem("ocl-jwt");
-    if (jwt) {
-      localStorage.removeItem("ocl-jwt");
-      this.router.navigateByUrl("/login");
-    }
+    this.cookieService.delete("app-jwt");
+    this.router.navigateByUrl("/login");
   }
 
   getIconBySuffix(fileType: string) {
@@ -313,29 +348,26 @@ export class DashboardComponent implements OnInit {
   }
 
   private downloadFileById(id: number) {
-    this.fileService.downloadFileById(id)
-      .subscribe(event => {
-        this.handleDownloadEvents(event,id);
-      });
+    window.open(`${DOWNLOAD_ONE_URL}?id=${id}`, '_self');
   }
 
   private handleDownloadEvents(event: HttpEvent<Object>, fileId: number) {
     if (event.type === HttpEventType.DownloadProgress) {
       console.log("download progress");
-      let fileInfo = this.files.filter(file=>file.id === fileId)[0];
+      let fileInfo = this.files.filter(file => file.id === fileId)[0];
       if (!fileInfo) return;
       let progress = Math.round(100 * event.loaded / fileInfo.size);
-      console.log("loaded " , event.loaded)
-      console.log("total " , fileInfo.size)
+      console.log("loaded ", event.loaded)
+      console.log("total ", fileInfo.size)
       console.log("progress : ", progress)
       fileInfo.isDownloading = true;
       fileInfo.downloadedAmount = progress;
     }
     if (event.type === HttpEventType.Response) {
       event = (<HttpEvent<Response>>event)
-      let fileInfo = this.files.filter(file=>file.id === fileId)[0];
+      let fileInfo = this.files.filter(file => file.id === fileId)[0];
       if (fileInfo)
-      fileInfo.isDownloading = false;
+        fileInfo.isDownloading = false;
       console.log("FINAL")
       console.log(event)
       const dataType = event.type;
@@ -500,5 +532,22 @@ export class DashboardComponent implements OnInit {
   updateColor(downloadedAmount: number) {
     if (downloadedAmount > 99) return 'accent';
     return 'primary';
+  }
+
+  onDirDeleteClick(dir: DirectoryInfo) {
+    let matDialogRef = this.dialog.open(DirectoryDeleteDialogComponent, {
+      data: dir
+    });
+
+    matDialogRef.afterClosed()
+      .subscribe(response => {
+        if (response){
+          this.directoryService.deleteDirectory(dir.id)
+            .subscribe(response=>{
+              console.log(response)
+            });
+        }
+      })
+
   }
 }

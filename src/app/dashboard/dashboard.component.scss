@@ -232,7 +232,21 @@ mat-list-item.logout-container {
       align-items: center;
       flex-direction: column;
       flex-wrap: wrap;
+
+
+      .dir-delete-button{
+        align-self: start;
+
+        .delete-button-icon{
+          align-self: end;
+          transform: scale(0.9);
+        }
+      }
+
+
     }
+
+
     .dirname{
       max-width: 132px;
       text-overflow: ellipsis;
@@ -241,4 +255,12 @@ mat-list-item.logout-container {
       margin: 6px 0 6px 6px;
     }
   }
+}
+
+.dark-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-right: 10px;
 }

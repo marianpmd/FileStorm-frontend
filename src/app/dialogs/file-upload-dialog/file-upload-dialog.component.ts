@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {computeFileSize} from "../../utils/Common";
+import {computeFileSize} from "../../../utils/Common";
 
 @Component({
   selector: 'app-file-upload-dialog',

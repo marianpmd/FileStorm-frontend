@@ -40,13 +40,7 @@ export class LoginComponent implements OnInit {
       this.auth.onLogin(this.email.value, encodedPassword)
         .subscribe({
           next: result => {
-            let body = result.body;
-            let token = body!.accessToken;
-
-            localStorage.setItem("ocl-jwt", token);
-
             this.isLoading = false;
-
             this.router.navigate(['/dashboard']);
           },
           error: err => {

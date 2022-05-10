@@ -4,6 +4,7 @@ import {AuthService} from "../../service/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {MatDialogRef} from "@angular/material/dialog";
+import {CookieService} from "ngx-cookie-service";
 
 export function matchValidator(
   matchTo: string,
@@ -37,7 +38,8 @@ export class RegisterComponent implements OnInit {
   constructor(private auth: AuthService,
               private snackBar: MatSnackBar,
               private router: Router,
-              private dialogRef : MatDialogRef<RegisterComponent>) {
+              private dialogRef : MatDialogRef<RegisterComponent>,
+              private cookieService:CookieService) {
   }
 
   formGroup: FormGroup = new FormGroup({
@@ -76,14 +78,7 @@ export class RegisterComponent implements OnInit {
     this.auth.onLogin(response.email, btoa(response.password))
       .subscribe({
         next: result => {
-          let body = result.body;
-          let token = body!.accessToken;
 
-          localStorage.setItem("ocl-jwt", token);
-
-          this.isLoading = false;
-
-          this.router.navigate(['/dashboard']);
         }
       });
   }

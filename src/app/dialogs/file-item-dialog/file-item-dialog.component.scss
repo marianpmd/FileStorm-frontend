@@ -95,10 +95,18 @@
   pointer-events: none;
 
   .image-resource {
-    object-fit: fill;
-    max-width: 90%;
+    object-fit: cover;
+    width: 82%;
+    height: auto;
   }
 }
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+  .image-resource {
+    max-width: 25%;
+  }
+}
+
 .video-container{
   width: 100%;
   height: 100%;

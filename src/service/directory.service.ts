@@ -5,6 +5,7 @@ import {DirectoryInfo} from "../datamodel/DirectoryInfo";
 import {DirectoryWithParentInfo} from "../datamodel/DirectoryWithParentInfo";
 
 const CREATE_DIRECTORY = environment.baseUrl + '/dir/create';
+const DELETE_DIRECTORY = environment.baseUrl + '/dir/delete';
 const ALL_DIRECTORIES = environment.baseUrl + '/dir/getAll';
 
 @Injectable({
@@ -23,4 +24,11 @@ export class DirectoryService {
     return this.http.post<DirectoryWithParentInfo>(ALL_DIRECTORIES,pathsFromRoot);
   }
 
+  deleteDirectory(id: number) {
+    return this.http.delete(DELETE_DIRECTORY,{
+      params:{
+        id:id
+      }
+    })
+  }
 }

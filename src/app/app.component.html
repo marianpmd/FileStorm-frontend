@@ -4,11 +4,11 @@
   <span class="logo-text">OwnCloud</span>
   <span class="example-spacer"></span>
 
-  <div class="dark-toggle">
-    <mat-icon>brightness_5</mat-icon>
-    <mat-slide-toggle [formControl]="toggleControl"></mat-slide-toggle>
-    <mat-icon>bedtime</mat-icon>
-  </div>
+  <button *ngIf="!isLocalPath()" mat-button class="notification">
+    <mat-icon matBadge="15" matBadgeSize="small" matBadgeColor="warn" color="accent" >notifications</mat-icon>
+  </button>
+
+
   <button matRipple mat-icon-button class="example-icon favorite-icon">
     <a class="links" href="https://github.com/marianpmd/OwnCloud-frontend"><img class="github-image" src="assets/icons/github-brands.svg"
                                                      alt="github"></a>

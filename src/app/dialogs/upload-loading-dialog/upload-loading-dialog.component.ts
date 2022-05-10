@@ -1,12 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FileService} from "../../service/file.service";
+import {FileService} from "../../../service/file.service";
 import {HttpEventType} from "@angular/common/http";
-import {FileUploadInfo} from "../../datamodel/FileUploadInfo";
-import {UploadState} from "../../utils/UploadState";
-import {UploadStateService} from "../../service/upload-state.service";
+import {FileUploadInfo} from "../../../datamodel/FileUploadInfo";
+import {UploadState} from "../../../utils/UploadState";
+import {UploadStateService} from "../../../service/upload-state.service";
 import {ProgressBarMode} from "@angular/material/progress-bar";
-import {FileType} from "../../utils/FileType";
+import {FileType} from "../../../utils/FileType";
 
 @Component({
   selector: 'app-upload-loading-dialog',
