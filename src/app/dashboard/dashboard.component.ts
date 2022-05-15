@@ -126,6 +126,10 @@ export class DashboardComponent implements OnInit {
     })
 
 
+
+  }
+
+  ngAfterViewInit() {
     this.searchFileControl.valueChanges
       .pipe(
         debounceTime(500),
@@ -141,6 +145,7 @@ export class DashboardComponent implements OnInit {
         )
       )
       .subscribe(data => {
+        console.log("DEBOUNCE")
         if (data.length == 0) {
           this.files = [];
         } else {
@@ -155,9 +160,7 @@ export class DashboardComponent implements OnInit {
 
       });
 
-  }
 
-  ngAfterViewInit() {
     this.sidenavService.setSidenav(this.snav);
     this.snav.autoFocus = false;
     if (!this.mobileQuery.matches) {

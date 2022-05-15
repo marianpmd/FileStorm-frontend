@@ -7,7 +7,7 @@
   overflow: hidden;
 
   .header {
-    height: 55px;
+    height: 60px;
     width: 100%;
     padding-left: 10px;
 
@@ -17,16 +17,15 @@
     flex-direction: row;
 
     .texts {
+      width: 50%;
       display: flex;
       flex-direction: column;
-
-      p {
+      margin-top: 8px;
+      div {
         padding-left: 10px;
         margin: 0;
-        max-width: 132px;
-        text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: hidden;
+        overflow-x: scroll;
       }
     }
 

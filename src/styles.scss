@@ -87,3 +87,6 @@ body {
   background: none;
 }
 
+.filename-div::-webkit-scrollbar{
+  height: 0px!important;
+}
