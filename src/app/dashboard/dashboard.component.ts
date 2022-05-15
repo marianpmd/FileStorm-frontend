@@ -35,6 +35,7 @@ import {computeFileSize, computeUsagePercentage} from "../../utils/Common";
 import jwt_decode from "jwt-decode";
 import {StorageRequestDialogComponent} from "../dialogs/storage-request-dialog/storage-request-dialog.component";
 import {NotificationService} from "../../service/notification.service";
+import {snackSuccessConfig} from "../../utils/UploadState";
 
 @Component({
   selector: 'app-dashboard',
@@ -575,6 +576,7 @@ export class DashboardComponent implements OnInit {
         console.log(sdkEvent)
         let parsedBody = JSON.parse(sdkEvent.body);
         _this.notificationService.appendToNotifications(parsedBody);
+        _this.snackBar.open("You've got a new message!","x",snackSuccessConfig());
       });
     }, (err) => console.log(err));
   }
