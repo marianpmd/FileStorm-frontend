@@ -1,15 +1,17 @@
 <mat-sidenav-container class="container">
   <mat-sidenav class="sidenav" #snav [mode]="mobileQuery.matches ? 'over' : 'side'">
     <mat-nav-list class="nav-list">
-      <mat-list-item [disableRipple]=true>{{userEmail}}</mat-list-item>
+      <mat-list-item *ngIf="loggedUser" [disableRipple]=true>{{loggedUser.email}}</mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item [disableRipple]=true matRipple class="add-button" [mat-menu-trigger-for]="menu" > <!--(click)="uploaderAction(uploader)"-->
+      <mat-list-item [disableRipple]=true matRipple class="add-button" [mat-menu-trigger-for]="menu">
         <mat-menu #menu xPosition="before">
           <button (click)="uploaderAction(uploader)" mat-menu-item>
-            <mat-icon>upload_file</mat-icon>File
+            <mat-icon>upload_file</mat-icon>
+            File
           </button>
           <button mat-menu-item (click)="addDirectory()">
-            <mat-icon>create_new_folder</mat-icon>Directory
+            <mat-icon>create_new_folder</mat-icon>
+            Directory
           </button>
         </mat-menu>
         <mat-icon color="accent">add_circle</mat-icon>
@@ -22,21 +24,48 @@
         />
       </mat-list-item>
 
+      <mat-list-item
+        (click)="onUserBoardClick()"
+        class="user-button-item" *ngIf="isAdminPath()">
+        <mat-icon>supervisor_account</mat-icon>
+          <div class="mat-typography">User Board</div>
+      </mat-list-item>
+
+      <mat-list-item
+        (click)="onAdminClick()"
+        class="admin-button-item" *ngIf="loggedUser && loggedUser.role === 'admin' && !isAdminPath()">
+        <mat-icon>supervisor_account</mat-icon>
+        <div class="mat-typography">Admin Board</div>
+      </mat-list-item>
+
       <span class="example-spacer"></span>
 
-        <div class="dark-toggle">
-          <mat-icon>brightness_5</mat-icon>
-          <mat-slide-toggle [formControl]="toggleControl"></mat-slide-toggle>
-          <mat-icon>bedtime</mat-icon>
-        </div>
+      <mat-list-item (click)="onRequestStorageClick()"
+        class="request-storage-button">
+        Request Storage
+      </mat-list-item>
+
+      <div class="dark-toggle">
+        <mat-icon>brightness_5</mat-icon>
+        <mat-slide-toggle [formControl]="toggleControl"></mat-slide-toggle>
+        <mat-icon>bedtime</mat-icon>
+      </div>
 
       <mat-list-item>Available Space</mat-list-item>
 
-      <mat-list-item>
-        <mat-progress-bar color="accent" [value]="58.9"></mat-progress-bar>
+      <mat-list-item *ngIf="loggedUser && loggedUser.assignedSpace!==0">
+        <mat-progress-bar color="accent" [value]="computeUsagePercentage(loggedUser)"></mat-progress-bar>
       </mat-list-item>
 
-      <mat-list-item style="font-size:10px">58.9GB of 100GB used</mat-list-item>
+      <mat-list-item *ngIf="loggedUser && loggedUser.assignedSpace!==0">
+        <p class="user-space-text">{{computeSpaceSize(loggedUser.occupiedSpace)}}
+          of {{computeSpaceSize(loggedUser.assignedSpace)}}</p>
+      </mat-list-item>
+
+      <mat-list-item class="user-space-text" *ngIf="loggedUser.assignedSpace == 0 || loggedUser.assignedSpace == loggedUser.occupiedSpace">
+        No storage assigned
+      </mat-list-item>
+
       <mat-list-item class="logout-container" (click)="onLogoutClick()">
         <mat-icon class="logout-icon">logout</mat-icon>
       </mat-list-item>
@@ -44,7 +73,10 @@
 
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content
+  <mat-sidenav-content *ngIf="isAdminPath()">
+    <app-admin-dashboard></app-admin-dashboard>
+  </mat-sidenav-content>
+  <mat-sidenav-content *ngIf="!isAdminPath()"
     infinite-scroll
     class="infinite-container"
     [scrollWindow]="false"
@@ -74,10 +106,10 @@
 
         </div>
 
-        <section class="directory-section mat-elevation-z10"  *ngIf="!isLoading" >
+        <section class="directory-section mat-elevation-z10" *ngIf="!isLoading">
           <div class="directory-div">
             <p *ngIf="directories.length === 0 && !prevDir"
-              style="width: 100%; text-align:center">No directories created.</p>
+               style="width: 100%; text-align:center">No directories created.</p>
             <div matRipple class="dir-item" *ngIf="prevDir" (click)="onParentClick()">
               <mat-icon mat-list-icon>drive_file_move_rtl</mat-icon>
               <div mat-line>{{prevDir.name}}</div>

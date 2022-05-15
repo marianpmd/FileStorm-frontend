@@ -1,0 +1,20 @@
+<div class="main" *ngIf="data">
+
+  <ng-container
+    *ngFor="let notification of data;index as i">
+    <mat-card [ngClass]="{'card-unread':isUnread(notification)}"
+      class="mat-elevation-z10 card">
+      <h3>{{notification.dateTime | date :'medium'}}</h3>
+      <mat-card-content>
+        <p>Sender : {{parsedNotifications[i].sender}}</p>
+        <p>Message : {{parsedNotifications[i].message}}</p>
+        <p>Additional info : {{parsedNotifications[i].action}}</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+
+</div>
+
+<ng-template [ngIf]="!data || data.length == 0">
+  <p>No new notifications!</p>
+</ng-template>

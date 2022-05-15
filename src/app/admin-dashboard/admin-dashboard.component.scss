@@ -1,0 +1,77 @@
+@import "../../assets/mixins/base-colors";
+
+
+.app-container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+table {
+  width: 90%;
+  justify-self: center;
+  align-self: center;
+  th{
+    text-align: center;
+  }
+  td{
+    text-align: center
+  }
+
+  td:nth-child(1){
+    padding-left: 14px;
+    min-width: 45px;
+  }
+  td:nth-child(2){
+    word-break: break-word;
+  }
+  td:nth-child(3){
+    padding-left: 8px;
+  }
+
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: rgba(245, 245, 245, 0.34);
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: rgba(239, 239, 239, 0.32);
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+.action-buttons{
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-direction: row;
+  padding-bottom: 8px;
+  padding-top: 8px;
+}
+.assign-button{
+  background-color: $primary;
+}
+.delete-button{
+  margin-left: 17px;
+  background-color: $warn;
+}
+.percentage{
+  width: 55px;
+}
+.system-mem-div{
+  min-width: 75%;
+  margin: 30px;
+  height: fit-content;
+}

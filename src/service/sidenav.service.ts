@@ -10,6 +10,9 @@ export class SidenavService {
 
   private sidenav!: MatSidenav;
 
+  public getSidenav(){
+    return this.sidenav;
+  }
 
   public setSidenav(sidenav: MatSidenav) {
     this.sidenav = sidenav;

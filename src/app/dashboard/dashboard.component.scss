@@ -9,12 +9,15 @@
 .container {
   width: 100%;
   height: 100%;
+  padding-top: 54px;
 
   .infinite-container {
     overflow: auto;
   }
 
   .sidenav {
+    padding-top: 54px;
+    max-width: 147px;
   }
 }
 
@@ -27,6 +30,12 @@
 
 .example-spacer {
   flex: 1 1 auto;
+}
+.request-storage-button{
+  font-size: 14px!important;
+  background-color: $primary;
+  margin-bottom: 15px!important;
+
 }
 
 .drop-area {
@@ -137,6 +146,12 @@ mat-list-item {
   align-items: center;
 }
 
+::ng-deep.mat-list-item-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 mat-list-item.logout-container {
   display: flex;
   justify-content: center;
@@ -222,7 +237,7 @@ mat-list-item.logout-container {
       color: $accent;
     }
 
-    .dir-item{
+    .dir-item {
       max-width: 140px;
       min-width: 111px;
 
@@ -234,10 +249,10 @@ mat-list-item.logout-container {
       flex-wrap: wrap;
 
 
-      .dir-delete-button{
+      .dir-delete-button {
         align-self: start;
 
-        .delete-button-icon{
+        .delete-button-icon {
           align-self: end;
           transform: scale(0.9);
         }
@@ -247,7 +262,7 @@ mat-list-item.logout-container {
     }
 
 
-    .dirname{
+    .dirname {
       max-width: 132px;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -262,5 +277,29 @@ mat-list-item.logout-container {
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  margin-right: 10px;
+}
+
+.user-space-text {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  text-align: center;
+}
+.admin-button-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 8px;
+  min-height: 50px;
+  background-color: $primary;
+}
+.user-button-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 8px;
+  min-height: 50px;
+  background-color: $accent;
 }

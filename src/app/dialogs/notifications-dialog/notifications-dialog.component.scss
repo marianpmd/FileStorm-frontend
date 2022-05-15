@@ -1,0 +1,24 @@
+@import "../../../assets/mixins/base-colors";
+
+.main{
+  max-height: 80vh;
+  overflow-y: scroll;
+  //display: flex;
+  //justify-content: center;
+  //align-items: center;
+  gap: 20px;
+  flex-direction: column;
+
+  .card{
+    margin-top: 10px!important;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .card-unread{
+    margin-top: 10px!important;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: $primary;
+  }
+}

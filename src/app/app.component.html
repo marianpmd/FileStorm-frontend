@@ -1,16 +1,19 @@
 <mat-toolbar color="primary" class="toolbar">
-  <button  *ngIf="!isLocalPath()" mat-icon-button (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
+  <button *ngIf="!isLoginPath()" mat-icon-button (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
   <div class="logo"><img id="logo-image" src="../assets/logo/logo-icon.svg" rel="crash"></div>
-  <span class="logo-text">OwnCloud</span>
+  <span class="logo-text">FileStorm</span>
   <span class="example-spacer"></span>
 
-  <button *ngIf="!isLocalPath()" mat-button class="notification">
-    <mat-icon matBadge="15" matBadgeSize="small" matBadgeColor="warn" color="accent" >notifications</mat-icon>
+  <button (click)="onNotificationClick()"
+          *ngIf="!isLoginPath()"
+          class="notification"
+          mat-button>
+    <mat-icon [matBadge]="notificationsLength" matBadgeSize="small" matBadgeColor="warn" color="accent" >notifications</mat-icon>
   </button>
 
 
   <button matRipple mat-icon-button class="example-icon favorite-icon">
-    <a class="links" href="https://github.com/marianpmd/OwnCloud-frontend"><img class="github-image" src="assets/icons/github-brands.svg"
+    <a class="links" href="https://github.com/marianpmd/FileStorm-frontend"><img class="github-image" src="assets/icons/github-brands.svg"
                                                      alt="github"></a>
   </button>
 </mat-toolbar>

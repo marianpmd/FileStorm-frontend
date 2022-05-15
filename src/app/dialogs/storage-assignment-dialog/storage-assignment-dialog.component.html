@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Assign storage to user</h2>
+<h3>Email {{data.email}}</h3>
+<mat-dialog-content>
+  <form [formGroup]="formGroup" class="uploadForm">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Amount</mat-label>
+      <mat-select [formControl]="amount">
+        <mat-option [value]="'500 MB'">500 MB</mat-option>
+        <mat-option [value]="'1 GB'">1 GB</mat-option>
+        <mat-option [value]="'2 GB'">2 GB</mat-option>
+        <mat-option [value]="'5 GB'">5 GB</mat-option>
+        <mat-option [value]="'10 GB'">10 GB</mat-option>
+        <mat-option [value]="'20 GB'">20 GB</mat-option>
+      </mat-select>
+      <mat-error *ngIf="amount.invalid">Amount is invalid!</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput [formControl]="description" required></textarea>
+      <mat-error *ngIf="formGroup.get('description')!.hasError('required')">Description is required!</mat-error>
+      <mat-error *ngIf="formGroup.get('description')!.hasError('maxlength')">Max length is 45!</mat-error>
+    </mat-form-field>
+
+    <button mat-button (click)="onSend()">Assign Storage</button>
+  </form>
+</mat-dialog-content>

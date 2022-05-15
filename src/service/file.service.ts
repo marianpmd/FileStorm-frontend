@@ -3,6 +3,7 @@ import {HttpClient, HttpEventType, HttpHeaders, HttpParams} from "@angular/commo
 import {environment} from "../environments/environment";
 import {Observable, tap} from "rxjs";
 import {FileInfo, FileInfoPaged} from "../datamodel/FileInfo";
+import {SystemInfo} from "../datamodel/SystemInfo";
 
 const UPLOAD_URL = environment.baseUrl + '/file/upload';
 const LOAD_ALL_URL = environment.baseUrl + '/file/all';
@@ -10,6 +11,7 @@ export const DOWNLOAD_ONE_URL = environment.baseUrl + '/file/one';
 const DELETE_ONE_URL = environment.baseUrl + '/file/delete/one';
 const CHECK_FILE_URL = environment.baseUrl + '/file/check';
 const LOAD_BY_KEYWORD = environment.baseUrl + '/file/byKeyword';
+const GET_SYS_INFO = environment.baseUrl + '/file/systemInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -125,4 +127,9 @@ export class FileService {
       }
     })
   }
+
+  getSystemInfo(){
+    return this.http.get<SystemInfo>(GET_SYS_INFO);
+  }
+
 }

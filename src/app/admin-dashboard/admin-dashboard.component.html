@@ -1,0 +1,48 @@
+<main class="app-container mat-app-background">
+
+  <mat-card class="mat-elevation-z10 system-mem-div">
+    <mat-card-title>System Information</mat-card-title>
+    <p>Total System Memory : {{computeSize(sysTotalSpace)}}</p>
+    <p>Free System Memory : {{computeSize(sysUsableSpace)}}</p>
+    <p>Percentage Usage : {{computeSysPercentage(sysTotalSpace,sysUsableSpace).toFixed(2)+'%'}}</p>
+    <mat-progress-bar color="accent" [value]="computeSysPercentage(sysTotalSpace,sysUsableSpace)"></mat-progress-bar>
+  </mat-card>
+
+  <table mat-table
+         [dataSource]="tableDataSource" multiTemplateDataRows
+         class="mat-elevation-z10">
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+      <th mat-header-cell *matHeaderCellDef> {{getHeaderTextFromColumnName(column)}} </th>
+      <td mat-cell *matCellDef="let element" class="table-data-cell"> {{getElementValFromCol(element, column)}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+        <div class="example-element-detail"
+             [@detailExpand]="element == expandedElement? 'expanded' : 'collapsed'">
+          <div class="action-buttons">
+            <button mat-button class="assign-button" (click)="onStorageClick(element)">
+              <mat-icon>storage</mat-icon>
+            </button>
+            <button mat-button class="delete-button" (click)="onDeleteClick(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <div class="percentage">{{computeUserPercentage(element)}}</div>
+            <mat-progress-bar *ngIf="element.assignedSpace !== 0"
+                              color="accent"
+                              [value]="computeBarPercentage(element)"></mat-progress-bar>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+
+</main>

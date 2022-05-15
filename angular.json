@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ownCloud-frontend": {
+    "fileStorm-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -42,7 +42,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/own-cloud-frontend",
+            "outputPath": "dist/file-storm-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -67,7 +67,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1.5mb"
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -98,10 +98,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ownCloud-frontend:build:production"
+              "browserTarget": "fileStorm-frontend:build:production"
             },
             "development": {
-              "browserTarget": "ownCloud-frontend:build:development"
+              "browserTarget": "fileStorm-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -109,7 +109,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ownCloud-frontend:build"
+            "browserTarget": "fileStorm-frontend:build"
           }
         },
         "test": {
@@ -135,5 +135,5 @@
       }
     }
   },
-  "defaultProject": "ownCloud-frontend"
+  "defaultProject": "fileStorm-frontend"
 }

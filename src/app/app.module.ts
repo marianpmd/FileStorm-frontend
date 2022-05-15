@@ -30,7 +30,6 @@ import {NgxFileDropModule} from "ngx-file-drop";
 import {XhrInterceptor} from "../interceptors/xhr.interceptor";
 import {FileUploadDialogComponent} from './dialogs/file-upload-dialog/file-upload-dialog.component';
 import {UploadLoadingDialogComponent} from './dialogs/upload-loading-dialog/upload-loading-dialog.component';
-import {JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {FileItemDialogComponent} from './dialogs/file-item-dialog/file-item-dialog.component';
@@ -45,9 +44,13 @@ import {PdfViewerModule} from "ng2-pdf-viewer";
 import {MatMenuModule} from "@angular/material/menu";
 import {DirectoryCreateDialogComponent} from './dialogs/directory-create-dialog/directory-create-dialog.component';
 import {MatBadgeModule} from "@angular/material/badge";
-import { DirectoryDeleteDialogComponent } from './dialogs/directory-delete-dialog/directory-delete-dialog.component';
-
-
+import {DirectoryDeleteDialogComponent} from './dialogs/directory-delete-dialog/directory-delete-dialog.component';
+import {AdminDashboardComponent} from './admin-dashboard/admin-dashboard.component';
+import {MatTableModule} from "@angular/material/table";
+import { StorageAssignmentDialogComponent } from './dialogs/storage-assignment-dialog/storage-assignment-dialog.component';
+import { StorageRequestDialogComponent } from './dialogs/storage-request-dialog/storage-request-dialog.component';
+import { NotificationsDialogComponent } from './dialogs/notifications-dialog/notifications-dialog.component';
+import { AreYouSureDialogComponent } from './dialogs/are-you-sure-dialog/are-you-sure-dialog.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +65,11 @@ import { DirectoryDeleteDialogComponent } from './dialogs/directory-delete-dialo
     FiltersDialogComponent,
     DirectoryCreateDialogComponent,
     DirectoryDeleteDialogComponent,
+    AdminDashboardComponent,
+    StorageAssignmentDialogComponent,
+    StorageRequestDialogComponent,
+    NotificationsDialogComponent,
+    AreYouSureDialogComponent,
   ],
     imports: [
         BrowserModule,
@@ -102,11 +110,11 @@ import { DirectoryDeleteDialogComponent } from './dialogs/directory-delete-dialo
         GoTopButtonModule,
         PdfViewerModule,
         MatMenuModule,
-        MatBadgeModule
+        MatBadgeModule,
+        MatTableModule,
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-    {provide: JWT_OPTIONS, useValue: JWT_OPTIONS}, JwtHelperService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,12 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FileService} from "../../../service/file.service";
-import {HttpEventType} from "@angular/common/http";
+import {HttpEventType, HttpStatusCode} from "@angular/common/http";
 import {FileUploadInfo} from "../../../datamodel/FileUploadInfo";
-import {UploadState} from "../../../utils/UploadState";
+import {snackErrorConfig, UploadState} from "../../../utils/UploadState";
 import {UploadStateService} from "../../../service/upload-state.service";
 import {ProgressBarMode} from "@angular/material/progress-bar";
 import {FileType} from "../../../utils/FileType";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-upload-loading-dialog',
@@ -23,6 +24,7 @@ export class UploadLoadingDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<UploadLoadingDialogComponent>,
     private fileService: FileService,
     private uploadStateService: UploadStateService,
+    private snackBar:MatSnackBar
   ) {
   }
 
@@ -66,12 +68,11 @@ export class UploadLoadingDialogComponent implements OnInit {
             }
           },
           error => {
-            // if (error.status === HttpStatusCode.PreconditionFailed) {
-            //   console.log("ERROR ON UPLOAD : ", error);
-            //   this.dialog.open(FileUpdateDialogComponent,{
-            //     hasBackdrop: true,
-            //   })
-            // }
+            if (error.status === HttpStatusCode.PreconditionFailed) {
+              console.log("ERROR ON UPLOAD : ", error);
+              this.snackBar.open(error.error.message,'x',snackErrorConfig());
+              this.dialogRef.close();
+            }
           });
     })
 

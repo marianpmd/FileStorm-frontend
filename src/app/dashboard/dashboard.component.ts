@@ -11,7 +11,6 @@ import {FileUploadDialogComponent} from "../dialogs/file-upload-dialog/file-uplo
 import {UploadLoadingDialogComponent} from "../dialogs/upload-loading-dialog/upload-loading-dialog.component";
 import {FileInfo} from "../../datamodel/FileInfo";
 import {ActivatedRoute, Router} from "@angular/router";
-import {JwtHelperService} from "@auth0/angular-jwt";
 import {FileType} from "../../utils/FileType";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UploadStateService} from "../../service/upload-state.service";
@@ -27,7 +26,15 @@ import {DirectoryInfo} from "../../datamodel/DirectoryInfo";
 import {saveAs} from "file-saver";
 import {CookieService} from "ngx-cookie-service";
 import {DirectoryDeleteDialogComponent} from "../dialogs/directory-delete-dialog/directory-delete-dialog.component";
-
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
+import {environment} from "../../environments/environment";
+import {AuthService} from "../../service/auth.service";
+import {UserInfo} from "../../datamodel/UserInfo";
+import {computeFileSize, computeUsagePercentage} from "../../utils/Common";
+import jwt_decode from "jwt-decode";
+import {StorageRequestDialogComponent} from "../dialogs/storage-request-dialog/storage-request-dialog.component";
+import {NotificationService} from "../../service/notification.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -68,6 +75,9 @@ export class DashboardComponent implements OnInit {
 
   @HostBinding('class') className = '';
 
+  private mobileQueryListener!: () => void;
+  toggleControl: FormControl = new FormControl(false);
+  loggedUser!: UserInfo;
 
   constructor(private sidenavService: SidenavService,
               private ruler: ViewportRuler,
@@ -76,7 +86,6 @@ export class DashboardComponent implements OnInit {
               private fileService: FileService,
               private dialog: MatDialog,
               private router: Router,
-              private jwtService: JwtHelperService,
               private snackBar: MatSnackBar,
               private uploadStateService: UploadStateService,
               private renderer: Renderer2,
@@ -84,6 +93,8 @@ export class DashboardComponent implements OnInit {
               private directoryService: DirectoryService,
               private cookieService: CookieService,
               private overlay: OverlayContainer,
+              private authService: AuthService,
+              private notificationService:NotificationService
   ) {
     this.isLoading = true;
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
@@ -91,48 +102,9 @@ export class DashboardComponent implements OnInit {
     this.mobileQuery.addEventListener('', this.mobileQueryListener);
   }
 
-  private mobileQueryListener!: () => void;
-  toggleControl: FormControl = new FormControl(false);
-
-  ngAfterViewInit() {
-    this.sidenavService.setSidenav(this.snav);
-    this.snav.autoFocus = false;
-    if (!this.mobileQuery.matches) {
-      this.snav.open();
-      this.changeDetectorRef.detectChanges();
-    }
-  }
-
-  private initDarkToggle() {
-
-    if (localStorage.getItem("darkMode") === null) {
-      localStorage.setItem('darkMode', "off");
-    }
-
-    if (localStorage.getItem("darkMode") === "on") {
-      this.toggleControl.setValue(!this.toggleControl.value);
-      this.className = 'darkMode';
-      this.overlay.getContainerElement().classList.add(this.className);
-    } else if (localStorage.getItem("darkMode") === "off") {
-      this.className = '';
-      this.overlay.getContainerElement().classList.remove('darkMode');
-    }
-    this.toggleControl.valueChanges.subscribe((darkMode) => {
-      const darkClassName = 'darkMode';
-      console.log("called")
-
-      this.className = darkMode ? darkClassName : '';
-      if (darkMode) {
-        localStorage.setItem("darkMode", "on");
-        this.overlay.getContainerElement().classList.add(darkClassName);
-      } else {
-        localStorage.setItem("darkMode", "off");
-        this.overlay.getContainerElement().classList.remove(darkClassName);
-      }
-    });
-  }
-
   ngOnInit(): void {
+    this.initSocket();
+
     this.initDarkToggle();
 
     this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc, this.currentPaths);
@@ -140,8 +112,11 @@ export class DashboardComponent implements OnInit {
     this.loadDirectoriesByPath();
 
     let jwt = this.cookieService.get("app-jwt");
-    let decodedToken = this.jwtService.decodeToken(jwt as string);
+
+    let decodedToken = jwt_decode(jwt as string);
+    // @ts-ignore
     this.userEmail = decodedToken.sub;
+    this.initUserInfo(this.userEmail);
 
 
     let div = document.getElementsByClassName("infinite-container")[0];
@@ -179,6 +154,44 @@ export class DashboardComponent implements OnInit {
 
       });
 
+  }
+
+  ngAfterViewInit() {
+    this.sidenavService.setSidenav(this.snav);
+    this.snav.autoFocus = false;
+    if (!this.mobileQuery.matches) {
+      this.snav.open();
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  private initDarkToggle() {
+
+    if (localStorage.getItem("darkMode") === null) {
+      localStorage.setItem('darkMode', "off");
+    }
+
+    if (localStorage.getItem("darkMode") === "on") {
+      this.toggleControl.setValue(!this.toggleControl.value);
+      this.className = 'darkMode';
+      this.overlay.getContainerElement().classList.add(this.className);
+    } else if (localStorage.getItem("darkMode") === "off") {
+      this.className = '';
+      this.overlay.getContainerElement().classList.remove('darkMode');
+    }
+    this.toggleControl.valueChanges.subscribe((darkMode) => {
+      const darkClassName = 'darkMode';
+      console.log("called")
+
+      this.className = darkMode ? darkClassName : '';
+      if (darkMode) {
+        localStorage.setItem("darkMode", "on");
+        this.overlay.getContainerElement().classList.add(darkClassName);
+      } else {
+        localStorage.setItem("darkMode", "off");
+        this.overlay.getContainerElement().classList.remove(darkClassName);
+      }
+    });
   }
 
   private findByKeyword(value: string) {
@@ -541,13 +554,61 @@ export class DashboardComponent implements OnInit {
 
     matDialogRef.afterClosed()
       .subscribe(response => {
-        if (response){
+        if (response) {
           this.directoryService.deleteDirectory(dir.id)
-            .subscribe(response=>{
+            .subscribe(response => {
               console.log(response)
             });
         }
       })
 
+  }
+
+  private initSocket() {
+    console.log("Initialize WebSocket Connection");
+
+    let ws = new SockJS(`${environment.baseUrl}/ws`);
+    let stompClient = Stomp.over(ws);
+    let _this = this;
+    stompClient.connect({}, function (frame) {
+      stompClient.subscribe(`/user/${_this.loggedUser.email}/queue/notify`, function (sdkEvent) {
+        console.log(sdkEvent)
+        let parsedBody = JSON.parse(sdkEvent.body);
+        _this.notificationService.appendToNotifications(parsedBody);
+      });
+    }, (err) => console.log(err));
+  }
+
+  private initUserInfo(userEmail: string) {
+    this.authService.getUserInfo(userEmail)
+      .subscribe(response => {
+        this.loggedUser = response;
+      });
+  }
+
+  computeSpaceSize(value: number) {
+    return computeFileSize(value);
+  }
+
+  onAdminClick() {
+    this.router.navigate(['dashboard/admin']);
+  }
+
+  isAdminPath() {
+    return this.router.url === "/dashboard/admin";
+  }
+
+  onUserBoardClick() {
+    this.router.navigate(['/dashboard']);
+  }
+
+  computeUsagePercentage(loggedUser: UserInfo) {
+    return computeUsagePercentage(loggedUser);
+  }
+
+  onRequestStorageClick() {
+    this.dialog.open(StorageRequestDialogComponent, {
+      data: this.loggedUser
+    })
   }
 }
