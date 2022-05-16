@@ -25,7 +25,7 @@ export class DirectoryService {
   }
 
   deleteDirectory(id: number) {
-    return this.http.delete(DELETE_DIRECTORY,{
+    return this.http.delete<DirectoryInfo>(DELETE_DIRECTORY,{
       params:{
         id:id
       }

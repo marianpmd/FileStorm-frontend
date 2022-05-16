@@ -560,8 +560,9 @@ export class DashboardComponent implements OnInit {
       .subscribe(response => {
         if (response) {
           this.directoryService.deleteDirectory(dir.id)
-            .subscribe(response => {
-              console.log(response)
+            .subscribe(deleted => {
+              console.log("DELETED : " +deleted);
+              this.directories = this.directories.filter(dir=>dir.id !== deleted.id);
             });
         }
       })
