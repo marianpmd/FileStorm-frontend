@@ -7,7 +7,6 @@
       "urls": [
         "/user/info",
         "/file/all",
-        "/file/one",
         "/file/systemInfo",
         "/notification/all",
         "/dir/getAll"
@@ -17,6 +16,16 @@
         "maxSize": 100,
         "maxAge": "1h",
         "timeout": "4s"
+      }
+    },{
+      "name": "api-performance",
+      "urls": [
+        "/file/one"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxAge": "1d",
+        "maxSize": 100
       }
     }
   ],
