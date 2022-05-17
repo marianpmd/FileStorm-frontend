@@ -80,7 +80,7 @@
     infinite-scroll
     class="infinite-container"
     [scrollWindow]="false"
-    [infiniteScrollDistance]="1"
+    [infiniteScrollDistance]="2"
     (scrolled)="onWindowScroll($event)">
 
     <div class="no-files-container" *ngIf="files.length === 0 || !files">
@@ -92,6 +92,7 @@
                    (onFileDrop)="onFileDrop($event)"
                    [multiple]=true>
       <ng-template ngx-file-drop-content-tmp
+                   #mainContent
                    let-openFileSelector="openFileSelector">
         <div [class.show]="isLoading" class="filtering-section">
 
@@ -140,7 +141,7 @@
             <p class="filename">{{file.name}}</p>
           </div>
 
-          <div class="scroll-top" [ngClass]="{ 'show-scrollTop': windowScrolled }">
+          <div class="scroll-top show-scrollTop">
             <button mat-mini-fab (click)="scrollToTop()">
               <mat-icon>expand_less</mat-icon>
             </button>
@@ -151,5 +152,8 @@
     </ngx-file-drop>
   </mat-sidenav-content>
 </mat-sidenav-container>
+<footer class="main-footer">
+
+</footer>
 
 

@@ -1,6 +1,25 @@
 {
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
+  "dataGroups": [
+    {
+      "name": "api-freshness",
+      "urls": [
+        "/user/info",
+        "/file/all",
+        "/file/one",
+        "/file/systemInfo",
+        "/notification/all",
+        "/dir/getAll"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "1h",
+        "timeout": "4s"
+      }
+    }
+  ],
   "assetGroups": [
     {
       "name": "app",

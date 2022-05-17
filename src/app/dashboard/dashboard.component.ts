@@ -120,12 +120,6 @@ export class DashboardComponent implements OnInit {
     this.initUserInfo(this.userEmail);
 
 
-    let div = document.getElementsByClassName("infinite-container")[0];
-    div.addEventListener('scroll', () => {
-      this.windowScrolled = div.scrollTop >= 100;
-    })
-
-
 
   }
 
@@ -617,4 +611,5 @@ export class DashboardComponent implements OnInit {
       data: this.loggedUser
     })
   }
+
 }
