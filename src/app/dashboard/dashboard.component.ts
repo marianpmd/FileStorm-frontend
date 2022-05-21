@@ -104,7 +104,9 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initSocket();
+    this.initNotifySocket();
+
+    this.initFileNotifySocket();
 
     this.initDarkToggle();
 
@@ -282,8 +284,9 @@ export class DashboardComponent implements OnInit {
         result => {
           if (result) {
             if (this.lastAdded !== result) {
-              this.files.push(result);
+              this.files.unshift(result);
               this.lastAdded = result;
+              this.initUserInfo(this.userEmail);
             }
           }
         }
@@ -361,41 +364,12 @@ export class DashboardComponent implements OnInit {
   private downloadFileById(id: number) {
     window.open(`${DOWNLOAD_ONE_URL}?id=${id}`, '_self');
   }
-
-  private handleDownloadEvents(event: HttpEvent<Object>, fileId: number) {
-    if (event.type === HttpEventType.DownloadProgress) {
-      console.log("download progress");
-      let fileInfo = this.files.filter(file => file.id === fileId)[0];
-      if (!fileInfo) return;
-      let progress = Math.round(100 * event.loaded / fileInfo.size);
-      console.log("loaded ", event.loaded)
-      console.log("total ", fileInfo.size)
-      console.log("progress : ", progress)
-      fileInfo.isDownloading = true;
-      fileInfo.downloadedAmount = progress;
-    }
-    if (event.type === HttpEventType.Response) {
-      event = (<HttpEvent<Response>>event)
-      let fileInfo = this.files.filter(file => file.id === fileId)[0];
-      if (fileInfo)
-        fileInfo.isDownloading = false;
-      console.log("FINAL")
-      console.log(event)
-      const dataType = event.type;
-      // @ts-ignore
-      const fileName = FileService.getFileNameFromContentDisposition(event.headers.get('Content-Disposition'));
-
-      // @ts-ignore
-      let blob = new Blob([event.body]);
-      saveAs(blob, fileName);
-    }
-  }
-
   private deleteFileById(id: number) {
     this.fileService.deleteFileById(id)
       .subscribe(response => {
         if (response.status === HttpStatusCode.Ok) {
           this.files = this.files.filter(fileInfo => fileInfo.id !== id)
+          this.initUserInfo(this.userEmail);
         }
       });
   }
@@ -557,14 +531,14 @@ export class DashboardComponent implements OnInit {
             .subscribe(deleted => {
               console.log("DELETED : " +deleted);
               this.directories = this.directories.filter(dir=>dir.id !== deleted.id);
+              this.initUserInfo(this.userEmail);
             });
         }
       })
-
   }
 
-  private initSocket() {
-    console.log("Initialize WebSocket Connection");
+  private initNotifySocket() {
+    console.log("Initialize WebSocket Connection for notifications");
 
     let ws = new SockJS(`${environment.baseUrl}/ws`);
     let stompClient = Stomp.over(ws);
@@ -575,6 +549,35 @@ export class DashboardComponent implements OnInit {
         let parsedBody = JSON.parse(sdkEvent.body);
         _this.notificationService.appendToNotifications(parsedBody);
         _this.snackBar.open("You've got a new message!","x",snackSuccessConfig());
+      });
+    }, (err) => console.log(err));
+  }
+
+
+  private initFileNotifySocket() {
+    console.log("Initialize WebSocket Connection for file updates");
+
+    let ws = new SockJS(`${environment.baseUrl}/ws`);
+    let stompClient = Stomp.over(ws);
+    let _this = this;
+    stompClient.connect({}, function (frame) {
+      stompClient.subscribe(`/user/${_this.loggedUser.email}/queue/newFile`, function (sdkEvent) {
+        console.log(sdkEvent)
+        let parsedBody = JSON.parse(sdkEvent.body) as FileInfo;
+        if (parsedBody.fileType === FileType.IMAGE ||
+          parsedBody.fileType === FileType.VIDEO ||
+          parsedBody.fileType === FileType.PDF)
+          parsedBody.isMedia = true;
+        console.log("the new file : ");
+        console.log(parsedBody);
+
+        var index = _this.files.findIndex(x => x.name==parsedBody.name);
+
+        console.log("index : " + index)
+
+        index !== -1 ? _this.files.unshift(parsedBody) : console.log("object already exists")
+
+        _this.snackBar.open("A new file was added!","x",snackSuccessConfig());
       });
     }, (err) => console.log(err));
   }
@@ -605,11 +608,9 @@ export class DashboardComponent implements OnInit {
   computeUsagePercentage(loggedUser: UserInfo) {
     return computeUsagePercentage(loggedUser);
   }
-
   onRequestStorageClick() {
     this.dialog.open(StorageRequestDialogComponent, {
       data: this.loggedUser
     })
   }
-
 }
