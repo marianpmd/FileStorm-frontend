@@ -15,7 +15,7 @@ import {FileType} from "../../utils/FileType";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UploadStateService} from "../../service/upload-state.service";
 import {FileItemDialogComponent} from "../dialogs/file-item-dialog/file-item-dialog.component";
-import {HttpEvent, HttpEventType, HttpStatusCode} from "@angular/common/http";
+import {HttpStatusCode} from "@angular/common/http";
 import {debounceTime, finalize, Subscription, switchMap, tap} from "rxjs";
 import {FileUpdateDialogComponent} from "../dialogs/file-update-dialog/file-update-dialog.component";
 import {FiltersDialogComponent} from "../dialogs/filters-dialog/filters-dialog.component";
@@ -23,7 +23,6 @@ import {FormControl} from "@angular/forms";
 import {DirectoryCreateDialogComponent} from "../dialogs/directory-create-dialog/directory-create-dialog.component";
 import {DirectoryService} from "../../service/directory.service";
 import {DirectoryInfo} from "../../datamodel/DirectoryInfo";
-import {saveAs} from "file-saver";
 import {CookieService} from "ngx-cookie-service";
 import {DirectoryDeleteDialogComponent} from "../dialogs/directory-delete-dialog/directory-delete-dialog.component";
 import * as Stomp from 'stompjs';
@@ -95,7 +94,7 @@ export class DashboardComponent implements OnInit {
               private cookieService: CookieService,
               private overlay: OverlayContainer,
               private authService: AuthService,
-              private notificationService:NotificationService
+              private notificationService: NotificationService
   ) {
     this.isLoading = true;
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
@@ -120,7 +119,6 @@ export class DashboardComponent implements OnInit {
     // @ts-ignore
     this.userEmail = decodedToken.sub;
     this.initUserInfo(this.userEmail);
-
 
 
   }
@@ -284,7 +282,7 @@ export class DashboardComponent implements OnInit {
         result => {
           if (result) {
             if (this.lastAdded !== result) {
-              this.files.unshift(result);
+              // this.files.unshift(result);
               this.lastAdded = result;
               this.initUserInfo(this.userEmail);
             }
@@ -364,6 +362,7 @@ export class DashboardComponent implements OnInit {
   private downloadFileById(id: number) {
     window.open(`${DOWNLOAD_ONE_URL}?id=${id}`, '_self');
   }
+
   private deleteFileById(id: number) {
     this.fileService.deleteFileById(id)
       .subscribe(response => {
@@ -529,8 +528,8 @@ export class DashboardComponent implements OnInit {
         if (response) {
           this.directoryService.deleteDirectory(dir.id)
             .subscribe(deleted => {
-              console.log("DELETED : " +deleted);
-              this.directories = this.directories.filter(dir=>dir.id !== deleted.id);
+              console.log("DELETED : " + deleted);
+              this.directories = this.directories.filter(dir => dir.id !== deleted.id);
               this.initUserInfo(this.userEmail);
             });
         }
@@ -548,7 +547,7 @@ export class DashboardComponent implements OnInit {
         console.log(sdkEvent)
         let parsedBody = JSON.parse(sdkEvent.body);
         _this.notificationService.appendToNotifications(parsedBody);
-        _this.snackBar.open("You've got a new message!","x",snackSuccessConfig());
+        _this.snackBar.open("You've got a new message!", "x", snackSuccessConfig());
       });
     }, (err) => console.log(err));
   }
@@ -570,14 +569,18 @@ export class DashboardComponent implements OnInit {
           parsedBody.isMedia = true;
         console.log("the new file : ");
         console.log(parsedBody);
+        console.log("the size")
+        console.log(_this.files)
+        _this.files.unshift(parsedBody);
 
-        var index = _this.files.findIndex(x => x.name==parsedBody.name);
+        //
+        // var index = _this.files.findIndex(x => x.name == parsedBody.name);
+        //
+        // console.log("index : " + index)
+        //
+        // index !== -1 ? : console.log("object already exists")
 
-        console.log("index : " + index)
-
-        index !== -1 ? _this.files.unshift(parsedBody) : console.log("object already exists")
-
-        _this.snackBar.open("A new file was added!","x",snackSuccessConfig());
+        _this.snackBar.open("A new file was added!", "x", snackSuccessConfig());
       });
     }, (err) => console.log(err));
   }
@@ -608,6 +611,7 @@ export class DashboardComponent implements OnInit {
   computeUsagePercentage(loggedUser: UserInfo) {
     return computeUsagePercentage(loggedUser);
   }
+
   onRequestStorageClick() {
     this.dialog.open(StorageRequestDialogComponent, {
       data: this.loggedUser
