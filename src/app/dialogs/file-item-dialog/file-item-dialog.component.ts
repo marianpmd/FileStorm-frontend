@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {FileInfo} from "../../../datamodel/FileInfo";
 import {computeFileSize} from "../../../utils/Common";
 import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
@@ -17,13 +17,12 @@ export class FileItemDialogComponent implements OnInit {
   progressMode: ProgressSpinnerMode = 'indeterminate';
   isLoaded: boolean = false;
   source!: any;
-  sourceUrl!:SafeUrl
+  sourceUrl!: SafeUrl
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: FileInfo,
     private fileService: FileService,
-    private sanitizer: DomSanitizer,
-    private dialogRef: MatDialogRef<FileItemDialogComponent>
+    private sanitizer: DomSanitizer
   ) {
   }
 
@@ -64,9 +63,5 @@ export class FileItemDialogComponent implements OnInit {
     let blob = new Blob([source]);
     const unsafeURL = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(unsafeURL);
-  }
-
-  stopPropagation($event: MouseEvent) {
-    $event.stopPropagation();
   }
 }

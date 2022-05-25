@@ -110,8 +110,9 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   computeSysPercentage(sysTotalSpace: number, sysUsableSpace: number) {
-    let remainingP = sysTotalSpace / sysUsableSpace;
-    return 100 - remainingP;
+    let usedSpace = sysTotalSpace - sysUsableSpace;
+    let remainingCoefficient = usedSpace/sysTotalSpace;
+    return remainingCoefficient * 100;
   }
 
   onDeleteClick(element: UserInfo) {
