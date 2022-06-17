@@ -112,10 +112,10 @@ import { AreYouSureDialogComponent } from './dialogs/are-you-sure-dialog/are-you
         MatMenuModule,
         MatBadgeModule,
         MatTableModule,
-    ],
+    ],//MatDialogModule, MatToolbarModule, ...
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-  ],
+  ],//interceptors
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -101,7 +101,7 @@ export class AdminDashboardComponent implements OnInit {
       .subscribe(response => {
         console.log("AFTER CLOSE ", response)
         this.loadUserInfo();
-        this.loadSysInfo()
+        this.loadSysInfo();
       })
   }
 
@@ -123,6 +123,8 @@ export class AdminDashboardComponent implements OnInit {
           this.userService.deleteUser(element)
             .subscribe(response => {
               this.tableDataSource = this.tableDataSource.filter(user => user.id !== response.id);
+              this.loadUserInfo();
+              this.loadSysInfo();
             });
       })
 

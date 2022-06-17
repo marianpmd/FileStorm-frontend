@@ -11,7 +11,8 @@ export class AuthGuardService implements CanActivate {
               private router : Router) {
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
+    : Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let token = this.cookieService.get("app-jwt")
 
     if (!token){

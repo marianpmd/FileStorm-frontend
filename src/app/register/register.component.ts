@@ -78,7 +78,7 @@ export class RegisterComponent implements OnInit {
     this.auth.onLogin(response.email, btoa(response.password))
       .subscribe({
         next: result => {
-
+          this.router.navigate(['/dashboard']);
         }
       });
   }

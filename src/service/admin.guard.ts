@@ -24,16 +24,12 @@ export class AdminGuard implements CanActivate {
       return false;
     }
 
-
     let decodedToken = jwt_decode(token);
     console.log("DECODED TOKEN", decodedToken);
     // @ts-ignore
     console.log("DECODED TOKEN ROLE", decodedToken.roles);
-
     // @ts-ignore
     return decodedToken.roles[0] === 'admin';
-
-
   }
 
 }

@@ -139,7 +139,6 @@ export class DashboardComponent implements OnInit {
         )
       )
       .subscribe(data => {
-        console.log("DEBOUNCE")
         if (data.length == 0) {
           this.files = [];
         } else {
@@ -284,11 +283,12 @@ export class DashboardComponent implements OnInit {
             if (this.lastAdded !== result) {
               // this.files.unshift(result);
               this.lastAdded = result;
-              this.initUserInfo(this.userEmail);
             }
           }
         }
       );
+
+      this.initUserInfo(this.userEmail);
     }
   }
 
@@ -528,7 +528,6 @@ export class DashboardComponent implements OnInit {
         if (response) {
           this.directoryService.deleteDirectory(dir.id)
             .subscribe(deleted => {
-              console.log("DELETED : " + deleted);
               this.directories = this.directories.filter(dir => dir.id !== deleted.id);
               this.initUserInfo(this.userEmail);
             });
@@ -547,6 +546,9 @@ export class DashboardComponent implements OnInit {
         console.log(sdkEvent)
         let parsedBody = JSON.parse(sdkEvent.body);
         _this.notificationService.appendToNotifications(parsedBody);
+
+        _this.initUserInfo(_this.userEmail);
+
         _this.snackBar.open("You've got a new message!", "x", snackSuccessConfig());
       });
     }, (err) => console.log(err));
@@ -572,13 +574,7 @@ export class DashboardComponent implements OnInit {
         console.log("the size")
         console.log(_this.files)
         _this.files.unshift(parsedBody);
-
-        //
-        // var index = _this.files.findIndex(x => x.name == parsedBody.name);
-        //
-        // console.log("index : " + index)
-        //
-        // index !== -1 ? : console.log("object already exists")
+        _this.initUserInfo(_this.userEmail);
 
         _this.snackBar.open("A new file was added!", "x", snackSuccessConfig());
       });
