@@ -32,10 +32,10 @@ jobs:
       - name: copy file via ssh key
         uses: appleboy/scp-action@master
         env:
-          HOST:  mariancr.go.ro
-          USERNAME:  marian
-          PORT:  22
-          PASSWORD: petrica1
+          HOST:  ${{ secrets.HOST }}
+          USERNAME:  ${{ secrets.USERNAME }}
+          PORT:  ${{ secrets.PORT }}
+          PASSWORD: ${{ secrets.PASSWORD }}
         with:
           source: "./file-storm-frontend"
           target: "/var/www/depl-test"
