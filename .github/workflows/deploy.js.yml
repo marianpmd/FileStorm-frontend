@@ -46,4 +46,4 @@ jobs:
       - name: Uncompress new Files
         run : sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /var/www/depl-test && sudo tar -xzvf file-storm-frontend.tar.gz && sudo rm file-storm-frontend.tar.gz'
       - name: Restart service
-        run : sudo systemctl restart nginx
+        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo systemctl restart nginx'
