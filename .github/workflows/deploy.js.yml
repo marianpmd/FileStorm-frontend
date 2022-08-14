@@ -39,9 +39,9 @@ jobs:
       - name: Compress and Copy New Files to server
         run : |
           cd dist/file-storm-frontend/
-          tar -czvf ../../file-storm-frontend.tar.gz ./
+          sudo tar -czvf ../../file-storm-frontend.tar.gz ./
           cd ..
           cd ..
           sudo sshpass -p ${{ secrets.PASSWORD }} sudo scp -v -o StrictHostKeyChecking=no -r file-storm-frontend.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/depl-test
       - name: Uncompress new Files
-        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /var/www/depl-test && tar -xzvf file-storm-frontend.tar.gz && sudo rm file-storm-frontend.tar.gz'
+        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /var/www/depl-test && sudo tar -xzvf file-storm-frontend.tar.gz && sudo rm file-storm-frontend.tar.gz'
