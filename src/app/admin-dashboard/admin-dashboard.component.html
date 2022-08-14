@@ -4,7 +4,7 @@
     <mat-card-title>System Information</mat-card-title>
     <p>Total System Memory : {{computeSize(sysTotalSpace)}}</p>
     <p>Free System Memory : {{computeSize(sysUsableSpace)}}</p>
-    <p>Percentage Usage : {{computeSysPercentage(sysTotalSpace,sysUsableSpace).toFixed(2)+'%'}}{{ ' ('+computeSize(sysTotalSpace-sysUsableSpace)+')' }}</p>
+    <p>Usage Percentage : {{computeSysPercentage(sysTotalSpace,sysUsableSpace).toFixed(2)+'%'}}{{ ' ('+computeSize(sysTotalSpace-sysUsableSpace)+')' }}</p>
     <mat-progress-bar color="accent" [value]="computeSysPercentage(sysTotalSpace,sysUsableSpace)"></mat-progress-bar>
   </mat-card>
 
