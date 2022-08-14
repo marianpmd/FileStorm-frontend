@@ -42,6 +42,6 @@ jobs:
           tar -czvf ../../file-storm-frontend.tar.gz ./
           cd ..
           cd ..
-          sudo sshpass -p ${{ secrets.PASSWORD }} scp -v -o StrictHostKeyChecking=no -r file-storm-frontend.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/depl-test
+          sudo sshpass -p ${{ secrets.PASSWORD }} sudo scp -v -o StrictHostKeyChecking=no -r file-storm-frontend.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/depl-test
       - name: Uncompress new Files
         run : sudo sshpass -p ${{ secrets.PASSWORD }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /var/www/depl-test && tar -xzvf file-storm-frontend.tar.gz && rm file-storm-frontend.tar.gz'
