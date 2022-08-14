@@ -1,6 +1,6 @@
 <main class="app-container mat-app-background">
 
-  <mat-card class="mat-elevation-z10 system-mem-div">
+  <mat-card *ngIf="sysUsableSpace && sysTotalSpace" class="mat-elevation-z10 system-mem-div">
     <mat-card-title>System Information</mat-card-title>
     <p>Total System Memory : {{computeSize(sysTotalSpace)}}</p>
     <p>Free System Memory : {{computeSize(sysUsableSpace)}}</p>
