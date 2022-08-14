@@ -8,6 +8,7 @@ export interface FileInfo {
   isLoaded: boolean;
   isDownloading : boolean;
   downloadedAmount:number;
+  isPublic:boolean;
 }
 
 export interface Sort {

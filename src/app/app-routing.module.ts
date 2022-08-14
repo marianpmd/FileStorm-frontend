@@ -5,6 +5,7 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 import {AuthGuardService} from "../service/auth-guard.service";
 import {AdminDashboardComponent} from "./admin-dashboard/admin-dashboard.component";
 import {AdminGuard} from "../service/admin.guard";
+import {PublicResourceComponent} from "./public-resource/public-resource.component";
 
 const routes: Routes = [
   {
@@ -24,9 +25,17 @@ const routes: Routes = [
     ]
   },
   {
+    path : "public/:id",
+    component: PublicResourceComponent
+  },
+  {
     path : "",
-    redirectTo : "dashboard",
+    redirectTo : "/dashboard",
     pathMatch : "full"
+  },
+  {
+    path : "**",
+    redirectTo : "/dashboard",
   },
 ];
 

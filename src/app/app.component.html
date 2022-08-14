@@ -1,11 +1,11 @@
 <mat-toolbar color="primary" class="toolbar">
-  <button *ngIf="!isLoginPath()" mat-icon-button (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
+  <button *ngIf="!isLoginPath() && !isPublicPath()" mat-icon-button (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
   <div class="logo"><img id="logo-image" src="../assets/logo/logo-icon.svg" rel="crash"></div>
   <span class="logo-text">FileStorm</span>
   <span class="example-spacer"></span>
 
   <button (click)="onNotificationClick()"
-          *ngIf="!isLoginPath()"
+          *ngIf="!isLoginPath() && !isPublicPath()"
           class="notification"
           mat-button>
     <mat-icon [matBadge]="notificationsLength" matBadgeSize="small" matBadgeColor="warn" color="accent" >notifications</mat-icon>

@@ -90,3 +90,7 @@ body {
 .filename-div::-webkit-scrollbar{
   height: 0px!important;
 }
+
+ .mat-menu-item.copy-link{
+  background-color: mat.get-color-from-palette($angular-accent,A200);
+}

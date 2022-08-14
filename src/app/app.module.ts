@@ -51,6 +51,8 @@ import { StorageAssignmentDialogComponent } from './dialogs/storage-assignment-d
 import { StorageRequestDialogComponent } from './dialogs/storage-request-dialog/storage-request-dialog.component';
 import { NotificationsDialogComponent } from './dialogs/notifications-dialog/notifications-dialog.component';
 import { AreYouSureDialogComponent } from './dialogs/are-you-sure-dialog/are-you-sure-dialog.component';
+import { PublicResourceComponent } from './public-resource/public-resource.component';
+import {ClipboardModule} from "@angular/cdk/clipboard";
 
 @NgModule({
   declarations: [
@@ -70,49 +72,51 @@ import { AreYouSureDialogComponent } from './dialogs/are-you-sure-dialog/are-you
     StorageRequestDialogComponent,
     NotificationsDialogComponent,
     AreYouSureDialogComponent,
+    PublicResourceComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatSidenavModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatSlideToggleModule,
-        MatSnackBarModule,
-        MatIconModule,
-        ReactiveFormsModule,
-        MatListModule,
-        FormsModule,
-        MatCardModule,
-        MatRippleModule,
-        MatFormFieldModule,
-        MatInputModule,
-        HttpClientModule,
-        MatProgressSpinnerModule,
-        MatDialogModule,
-        MatSidenavModule,
-        ScrollingModule,
-        InfiniteScrollModule,
-        MatProgressBarModule,
-        MatFileUploadModule,
-        NgxFileDropModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: environment.production,
-            // Register the ServiceWorker as soon as the application is stable
-            // or after 30 seconds (whichever comes first).
-            registrationStrategy: 'registerWhenStable:30000'
-        }),
-        MatAutocompleteModule,
-        MatSelectModule,
-        MatRadioModule,
-        NgxScrollTopModule,
-        GoTopButtonModule,
-        PdfViewerModule,
-        MatMenuModule,
-        MatBadgeModule,
-        MatTableModule,
-    ],//MatDialogModule, MatToolbarModule, ...
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatListModule,
+    FormsModule,
+    MatCardModule,
+    MatRippleModule,
+    MatFormFieldModule,
+    MatInputModule,
+    HttpClientModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSidenavModule,
+    ScrollingModule,
+    InfiniteScrollModule,
+    MatProgressBarModule,
+    MatFileUploadModule,
+    NgxFileDropModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
+    MatAutocompleteModule,
+    MatSelectModule,
+    MatRadioModule,
+    NgxScrollTopModule,
+    GoTopButtonModule,
+    PdfViewerModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatTableModule,
+    ClipboardModule,
+  ],//MatDialogModule, MatToolbarModule, ...
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
   ],//interceptors

@@ -12,6 +12,9 @@ const DELETE_ONE_URL = environment.baseUrl + '/file/delete/one';
 const CHECK_FILE_URL = environment.baseUrl + '/file/check';
 const LOAD_BY_KEYWORD = environment.baseUrl + '/file/byKeyword';
 const GET_SYS_INFO = environment.baseUrl + '/file/systemInfo';
+const MAKE_PUBLIC = environment.baseUrl + '/file/makePublic';
+const MAKE_PRIVATE = environment.baseUrl + '/file/makePrivate';
+export const DOWNLOAD_ONE_PUBLIC = environment.baseUrl + '/file/public';
 
 @Injectable({
   providedIn: 'root'
@@ -132,4 +135,19 @@ export class FileService {
     return this.http.get<SystemInfo>(GET_SYS_INFO);
   }
 
+  makeFilePublic(fileId :number) {
+    return this.http.put<FileInfo>(MAKE_PUBLIC,{},{
+      params : {
+        id : fileId
+      }
+    })
+  }
+
+  makeFilePrivate(fileId: number) {
+    return this.http.put<FileInfo>(MAKE_PRIVATE,{},{
+      params : {
+        id : fileId
+      }
+    })
+  }
 }

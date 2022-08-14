@@ -81,4 +81,8 @@ export class AppComponent {
           });
       })
   }
+
+  isPublicPath() {
+    return this.router.url.includes('/public/');
+  }
 }

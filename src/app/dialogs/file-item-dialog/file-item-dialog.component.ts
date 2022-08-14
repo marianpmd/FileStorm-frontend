@@ -6,6 +6,8 @@ import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
 import {FileService} from "../../../service/file.service";
 import {FileType} from "../../../utils/FileType";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {environment} from "../../../environments/environment";
+
 
 @Component({
   selector: 'app-file-item-dialog',
@@ -18,6 +20,7 @@ export class FileItemDialogComponent implements OnInit {
   isLoaded: boolean = false;
   source!: any;
   sourceUrl!: SafeUrl
+  generatedLink!: string;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: FileInfo,
@@ -30,6 +33,7 @@ export class FileItemDialogComponent implements OnInit {
     console.log("IS MEDIA >? ")
     console.log(this.data.isMedia)
     this.isMedia = this.data.isMedia;
+    this.generatedLink = `${environment.linkGenURL}${this.data.id}`;
 
     if (this.isMedia) {
       this.fileService.getByFileId(this.data.id)
@@ -63,5 +67,20 @@ export class FileItemDialogComponent implements OnInit {
     let blob = new Blob([source]);
     const unsafeURL = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(unsafeURL);
+  }
+
+  makePublic(data: FileInfo) {
+    this.fileService.makeFilePublic(data.id)
+      .subscribe(response=>{
+        this.data.isPublic = response.isPublic;
+        this.generatedLink = `${environment.linkGenURL}${response.id}`;
+      });
+  }
+
+  makePrivate(data: FileInfo) {
+    this.fileService.makeFilePrivate(data.id)
+      .subscribe(response=>{
+        this.data.isPublic = response.isPublic;
+      });
   }
 }

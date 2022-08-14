@@ -5,7 +5,8 @@
 export const environment = {
   // baseUrl: "http://192.168.1.108:8080",
   baseUrl: "http://localhost:8080",
-  production: false
+  production: false,
+  linkGenURL: 'http://localhost:4200/public/'
 };
 
 /*

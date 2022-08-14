@@ -5,13 +5,30 @@
       <p>Size : {{computeFileSize(data.size)}}</p>
     </div>
     <mat-dialog-actions class="buttons">
-      <button mat-mini-fab [mat-dialog-close]="'download'" class="download-button" cdkFocusInitial>
+      <button mat-mini-fab [matMenuTriggerFor]="privateMenu" *ngIf="data.isPublic"  class="public-button actions" cdkFocusInitial>
+        <mat-icon>public</mat-icon>
+      </button>
+      <button mat-mini-fab [matMenuTriggerFor]="publicMenu" *ngIf="!data.isPublic" class="make-public-button actions" cdkFocusInitial>
+        <mat-icon>lock</mat-icon>
+      </button>
+
+      <mat-menu #publicMenu>
+        <div style="padding: 8px" class="mat-app-background">This resource is private.</div>
+        <button (click)="makePublic(data)" mat-menu-item>Make Public</button>
+      </mat-menu>
+      <mat-menu #privateMenu>
+        <div style="padding: 8px" class="mat-app-background">This resource is public.</div>
+        <button class="copy-link" mat-menu-item [cdkCopyToClipboard]="generatedLink">Copy the link</button>
+        <button (click)="makePrivate(data)" mat-menu-item>Make Private</button>
+      </mat-menu>
+
+      <button mat-mini-fab [mat-dialog-close]="'download'" class="download-button actions" cdkFocusInitial>
         <mat-icon>download</mat-icon>
       </button>
-      <button mat-mini-fab [mat-dialog-close]="'delete'" class="delete-button" cdkFocusInitial>
+      <button mat-mini-fab [mat-dialog-close]="'delete'" class="delete-button actions" cdkFocusInitial>
         <mat-icon>delete</mat-icon>
       </button>
-      <button mat-mini-fab [mat-dialog-close]="" class="cancel-button">
+      <button mat-mini-fab [mat-dialog-close]="" class="cancel-button actions">
         <mat-icon>close</mat-icon>
       </button>
     </mat-dialog-actions>
