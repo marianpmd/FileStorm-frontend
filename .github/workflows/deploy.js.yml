@@ -11,12 +11,14 @@ jobs:
   build:
     # using Ubuntu
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1 #this installs node and npm for us
         with:
-          node-version: "16.x"
+          node-version: '16.x'
 
       - uses: actions/cache@v1 # this allows for re-using node_modules caching, making builds a bit faster.
         with:
@@ -24,19 +26,22 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - run: npm cache clean --force
-      - run: npm install --force
-      - run: npm install -g @angular/cli > /dev/null
-      - run: ng build
 
-      - name: copy file via ssh key
-        uses: appleboy/scp-action@master
-        env:
-          HOST:  ${{ secrets.HOST }}
-          USERNAME:  ${{ secrets.USERNAME }}
-          PORT:  ${{ secrets.PORT }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-        with:
-          source: "./file-storm-frontend"
-          target: "/var/www/depl-test"
-          strip_components: 2
+      - name: NPM Install
+        run: npm install --force
+      - name: NPM Install Angular
+        run: npm install -g @angular/cli > /dev/null
+      - name: NPM build Angular Production
+        run: ng build
+      - name: Delete Existing Files
+        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'rm -rf /var/www/depl-test'
+
+      - name: Compress and Copy New Files to server
+        run : |
+          cd dist/file-storm-frontend/
+          tar -czvf ../../file-storm-frontend.tar.gz ./
+          cd ..
+          cd ..
+          sudo sshpass -p ${{ secrets.PASSWORD }} scp -v -o StrictHostKeyChecking=no -r file-storm-frontend.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/depl-test
+      - name: Uncompress new Files
+        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /var/www/depl-test && tar -xzvf file-storm-frontend.tar.gz && rm file-storm-frontend.tar.gz'
