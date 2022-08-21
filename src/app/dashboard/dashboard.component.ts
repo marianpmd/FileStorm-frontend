@@ -229,7 +229,7 @@ export class DashboardComponent implements OnInit {
   }
 
   handleFileUpload(files: File[]) {
-    if (files.length > 6) {
+    if (files.length > 20) {
       this.snackBar.open("Only up to 6 files are allowed at once!", "Close", {
         duration: 2000,
         panelClass: ['mat-toolbar', 'mat-warn']
