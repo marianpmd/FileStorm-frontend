@@ -16,7 +16,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {UploadStateService} from "../../service/upload-state.service";
 import {FileItemDialogComponent} from "../dialogs/file-item-dialog/file-item-dialog.component";
 import {HttpStatusCode} from "@angular/common/http";
-import {debounceTime, finalize, Subscription, switchMap, tap} from "rxjs";
+import {debounceTime, finalize, Observable, Subscription, switchMap, tap} from "rxjs";
 import {FileUpdateDialogComponent} from "../dialogs/file-update-dialog/file-update-dialog.component";
 import {FiltersDialogComponent} from "../dialogs/filters-dialog/filters-dialog.component";
 import {FormControl} from "@angular/forms";
@@ -35,6 +35,7 @@ import jwt_decode from "jwt-decode";
 import {StorageRequestDialogComponent} from "../dialogs/storage-request-dialog/storage-request-dialog.component";
 import {NotificationService} from "../../service/notification.service";
 import {snackSuccessConfig} from "../../utils/UploadState";
+import {DirectoryWithParentInfo} from "../../datamodel/DirectoryWithParentInfo";
 
 @Component({
   selector: 'app-dashboard',
@@ -53,6 +54,8 @@ export class DashboardComponent implements OnInit {
   files: FileInfo[] = [];
   prevDir!: DirectoryInfo | null;
   directories: DirectoryInfo[] = [];
+
+  directoriesObs!: Observable<DirectoryWithParentInfo> ;
 
   userEmail!: string;
   fileUploadSubscription!: Subscription;
@@ -111,7 +114,8 @@ export class DashboardComponent implements OnInit {
 
     this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc, this.currentPaths);
 
-    this.loadDirectoriesByPath();
+    this.directoriesObs = this.directoryService.getAllDirectories(this.currentPaths);
+    // this.loadDirectoriesByPath();
 
     let jwt = this.cookieService.get("app-jwt");
 
@@ -612,5 +616,9 @@ export class DashboardComponent implements OnInit {
     this.dialog.open(StorageRequestDialogComponent, {
       data: this.loggedUser
     })
+  }
+
+  onMonitorClick() {
+    window.open(environment.baseUrl+'/monitoring')
   }
 }

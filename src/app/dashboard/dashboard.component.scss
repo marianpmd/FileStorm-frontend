@@ -287,12 +287,45 @@ mat-list-item.logout-container {
   font-size: 12px;
   text-align: center;
 }
+
 .admin-button-item{
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding-top: 8px;
   min-height: 50px;
+  background-color: $primary;
+}
+
+::ng-deep.mat-list-item.admin-monitor-item > span{
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+::ng-deep.mat-list-item.mat-focus-indicator.admin-button-item.ng-star-inserted > span {
+  padding-left: 10px!important;
+}
+::ng-deep.mat-list-item.mat-focus-indicator.admin-monitor-item.ng-star-inserted > span {
+  padding-left: 10px!important;
+}
+::ng-deep.mat-list-item.admin-button-item > span{
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+
+
+::ng-deep.mat-list-item.mat-focus-indicator.admin-monitor-item.ng-star-inserted > span > div{
+  text-align: start;
+  width: 70%;
+}
+::ng-deep.mat-list-item.mat-focus-indicator.admin-button-item.ng-star-inserted > span > div{
+  text-align: start;
+  width: 70%;
+}
+
+.admin-monitor-item{
+  margin-top: 5px;
+  min-height: 50px;
+  padding-top: 8px;
   background-color: $primary;
 }
 .user-button-item{

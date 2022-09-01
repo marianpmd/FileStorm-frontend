@@ -37,6 +37,12 @@
         <mat-icon>supervisor_account</mat-icon>
         <div class="mat-typography">Admin Board</div>
       </mat-list-item>
+      <mat-list-item
+        (click)="onMonitorClick()"
+        class="admin-monitor-item" *ngIf="loggedUser && loggedUser.role === 'admin' && !isAdminPath()">
+        <mat-icon>monitor</mat-icon>
+        <div class="mat-typography">Monitoring</div>
+      </mat-list-item>
 
       <span class="example-spacer"></span>
 
@@ -108,15 +114,15 @@
         </div>
 
         <section class="directory-section mat-elevation-z10" *ngIf="!isLoading">
-          <div class="directory-div">
-            <p *ngIf="directories.length === 0 && !prevDir"
+          <div class="directory-div" *ngIf="directoriesObs | async as directories ">
+            <p *ngIf="directories.directories.length === 0 && !prevDir"
                style="width: 100%; text-align:center">No directories created.</p>
             <div matRipple class="dir-item" *ngIf="prevDir" (click)="onParentClick()">
               <mat-icon mat-list-icon>drive_file_move_rtl</mat-icon>
               <div mat-line>{{prevDir.name}}</div>
             </div>
 
-            <div class="dir-item" *ngFor="let dir of directories">
+            <div class="dir-item" *ngFor="let dir of directories.directories">
               <button mat-button (click)="onDirDeleteClick(dir)" class="dir-delete-button">
                 <mat-icon class="delete-button-icon">cancel</mat-icon>
               </button>
