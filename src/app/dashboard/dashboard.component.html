@@ -39,7 +39,7 @@
       </mat-list-item>
       <mat-list-item
         (click)="onMonitorClick()"
-        class="admin-monitor-item" *ngIf="loggedUser && loggedUser.role === 'admin' && !isAdminPath()">
+        class="admin-monitor-item" *ngIf="isAdminPath()">
         <mat-icon>monitor</mat-icon>
         <div class="mat-typography">Monitoring</div>
       </mat-list-item>
