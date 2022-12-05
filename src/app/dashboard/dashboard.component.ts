@@ -321,23 +321,23 @@ export class DashboardComponent implements OnInit {
     this.cookieService.delete("app-jwt");
     this.router.navigateByUrl("/login");
   }
-
-  getIconBySuffix(fileType: string) {
-    switch (fileType) {
-      case FileType.FILE :
-        return 'insert_drive_file'
-      case FileType.IMAGE :
-        return 'image'
-      case FileType.VIDEO :
-        return 'play_circle'
-      case FileType.ARCHIVE :
-        return 'archive'
-      case FileType.PDF :
-        return 'picture_as_pdf'
-      default:
-        return 'insert_drive_file'
-    }
-  }
+  //
+  // getIconBySuffix(fileType: string) {
+  //   switch (fileType) {
+  //     case FileType.FILE :
+  //       return 'insert_drive_file'
+  //     case FileType.IMAGE :
+  //       return 'image'
+  //     case FileType.VIDEO :
+  //       return 'play_circle'
+  //     case FileType.ARCHIVE :
+  //       return 'archive'
+  //     case FileType.PDF :
+  //       return 'picture_as_pdf'
+  //     default:
+  //       return 'insert_drive_file'
+  //   }
+  // }
 
   onFileItemClick(file: FileInfo) {
     let matDialogRef = this.dialog.open(FileItemDialogComponent, {

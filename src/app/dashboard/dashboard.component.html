@@ -28,7 +28,7 @@
         (click)="onUserBoardClick()"
         class="user-button-item" *ngIf="isAdminPath()">
         <mat-icon>supervisor_account</mat-icon>
-          <div class="mat-typography">User Board</div>
+        <div class="mat-typography">User Board</div>
       </mat-list-item>
 
       <mat-list-item
@@ -47,7 +47,7 @@
       <span class="example-spacer"></span>
 
       <mat-list-item (click)="onRequestStorageClick()"
-        class="request-storage-button">
+                     class="request-storage-button">
         Request Storage
       </mat-list-item>
 
@@ -68,7 +68,8 @@
           of {{computeSpaceSize(loggedUser.assignedSpace)}}</p>
       </mat-list-item>
 
-      <mat-list-item class="user-space-text" *ngIf="loggedUser.assignedSpace == 0 || loggedUser.assignedSpace == loggedUser.occupiedSpace">
+      <mat-list-item class="user-space-text"
+                     *ngIf="loggedUser?.assignedSpace == 0 || loggedUser?.assignedSpace == loggedUser?.occupiedSpace">
         No storage assigned
       </mat-list-item>
 
@@ -83,11 +84,11 @@
     <app-admin-dashboard></app-admin-dashboard>
   </mat-sidenav-content>
   <mat-sidenav-content *ngIf="!isAdminPath()"
-    infinite-scroll
-    class="infinite-container"
-    [scrollWindow]="false"
-    [infiniteScrollDistance]="2"
-    (scrolled)="onWindowScroll($event)">
+                       infinite-scroll
+                       class="infinite-container"
+                       [scrollWindow]="false"
+                       [infiniteScrollDistance]="2"
+                       (scrolled)="onWindowScroll($event)">
 
     <div class="no-files-container" *ngIf="files.length === 0 || !files">
       <p *ngIf="files.length === 0 && isRequestMade" class="no-files-message">No files to show.
@@ -138,22 +139,17 @@
           <mat-progress-spinner class="spinner" color="primary" mode="indeterminate"></mat-progress-spinner>
         </div>
 
+          <section *ngIf="!isLoading" class="files-container">
 
-        <section class="files-container" *ngIf="!isLoading">
+            <app-file-item *ngFor="let file of files" [file]="file"></app-file-item>
 
-          <div class="file-item" matRipple (click)="onFileItemClick(file)" *ngFor="let file of files">
-            <mat-icon class="icon" color="primary">{{getIconBySuffix(file.fileType)}}</mat-icon>
-            <mat-divider></mat-divider>
-            <p class="filename">{{file.name}}</p>
-          </div>
+            <div class="scroll-top show-scrollTop">
+              <button mat-mini-fab (click)="scrollToTop()">
+                <mat-icon>expand_less</mat-icon>
+              </button>
+            </div>
 
-          <div class="scroll-top show-scrollTop">
-            <button mat-mini-fab (click)="scrollToTop()">
-              <mat-icon>expand_less</mat-icon>
-            </button>
-          </div>
-
-        </section>
+          </section>
       </ng-template>
     </ngx-file-drop>
   </mat-sidenav-content>

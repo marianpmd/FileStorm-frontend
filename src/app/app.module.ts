@@ -53,6 +53,7 @@ import { NotificationsDialogComponent } from './dialogs/notifications-dialog/not
 import { AreYouSureDialogComponent } from './dialogs/are-you-sure-dialog/are-you-sure-dialog.component';
 import { PublicResourceComponent } from './public-resource/public-resource.component';
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import { FileItemComponent } from './shared/file-item/file-item.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
     NotificationsDialogComponent,
     AreYouSureDialogComponent,
     PublicResourceComponent,
+    FileItemComponent,
   ],
   imports: [
     BrowserModule,

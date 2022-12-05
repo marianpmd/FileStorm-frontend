@@ -1,0 +1,37 @@
+@import "../../../assets/mixins/base-colors";
+
+.file-item {
+  max-width: 140px;
+  min-width: 140px;
+  border: 1px solid $primary;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  .icon {
+    transform: scale(1.5);
+    padding: 30px;
+  }
+
+  p.filename {
+    max-width: 132px;
+    color: $primary;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 6px 0 6px 6px;
+  }
+
+  mat-divider {
+    width: 100%;
+    background-color: $primary;
+  }
+}
+
+:hover.file-item {
+  background-color: rgba(0, 0, 0, 0.1);
+}

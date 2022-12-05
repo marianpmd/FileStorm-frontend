@@ -64,46 +64,15 @@
   margin-top: 7px;
   margin-bottom: 7px;
   width: 100%;
-  display: grid;
-  grid-row-gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  justify-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  row-gap: 31px;
+  column-gap: 31px;
+  padding-left: 4%;
 
-  .file-item {
-    max-width: 140px;
-    min-width: 140px;
-    border: 1px solid $primary;
-    border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-
-    .icon {
-      transform: scale(1.5);
-      padding: 30px;
-    }
-
-    p.filename {
-      max-width: 132px;
-      color: $primary;
-      font-weight: 600;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      margin: 6px 0 6px 6px;
-    }
-
-    mat-divider {
-      width: 100%;
-      background-color: $primary;
-    }
-  }
-
-  :hover.file-item {
-    //background-color: rgba(0, 0, 0, 0.04);
-  }
 }
 
 mat-list-item.add-button {
