@@ -33,8 +33,8 @@ jobs:
         run: npm install -g @angular/cli > /dev/null
       - name: NPM build Angular Production
         run: ng build
-      - name: Delete Existing Files
-        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo rm -rf /var/www/mariancr.go.ro/html/*'
+#      - name: Delete Existing Files
+#        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo rm -rf /var/www/mariancr.go.ro/html/*'
 
       - name: Compress and Copy New Files to server
         run : |
