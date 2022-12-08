@@ -22,10 +22,10 @@
         <button (click)="makePrivate(data)" mat-menu-item>Make Private</button>
       </mat-menu>
 
-      <button mat-mini-fab [mat-dialog-close]="'download'" class="download-button actions" cdkFocusInitial>
+      <button mat-mini-fab (click)="downloadFile()" [mat-dialog-close]="" class="download-button actions" cdkFocusInitial>
         <mat-icon>download</mat-icon>
       </button>
-      <button mat-mini-fab [mat-dialog-close]="'delete'" class="delete-button actions" cdkFocusInitial>
+      <button mat-mini-fab (click)="deleteFile()" [mat-dialog-close]="" class="delete-button actions" cdkFocusInitial>
         <mat-icon>delete</mat-icon>
       </button>
       <button mat-mini-fab [mat-dialog-close]="" class="cancel-button actions">

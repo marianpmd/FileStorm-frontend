@@ -1,12 +1,14 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {FileInfo} from "../../../datamodel/FileInfo";
 import {computeFileSize} from "../../../utils/Common";
 import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
-import {FileService} from "../../../service/file.service";
+import {DOWNLOAD_ONE_URL, FileService} from "../../../service/file.service";
 import {FileType} from "../../../utils/FileType";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {environment} from "../../../environments/environment";
+import {HttpStatusCode} from "@angular/common/http";
+import {FileChangeService} from "../../../service/file-change.service";
 
 
 @Component({
@@ -25,7 +27,8 @@ export class FileItemDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: FileInfo,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private fileChangeService: FileChangeService
   ) {
   }
 
@@ -81,6 +84,27 @@ export class FileItemDialogComponent implements OnInit {
     this.fileService.makeFilePrivate(data.id)
       .subscribe(response=>{
         this.data.isPublic = response.isPublic;
+      });
+  }
+
+  downloadFile() {
+    this.downloadFileById(this.data.id);
+  }
+
+  deleteFile() {
+    this.deleteFileById(this.data.id);
+  }
+
+  private downloadFileById(id: number) {
+    window.open(`${DOWNLOAD_ONE_URL}?id=${id}`, '_self');
+  }
+
+  private deleteFileById(id: number) {
+    this.fileService.deleteFileById(id)
+      .subscribe(response => {
+        if (response.status === HttpStatusCode.Ok) {
+          this.fileChangeService.setChangedFileId(id);
+        }
       });
   }
 }

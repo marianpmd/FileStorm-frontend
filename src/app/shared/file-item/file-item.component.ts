@@ -3,6 +3,7 @@ import {FileInfo} from "../../../datamodel/FileInfo";
 import {FileItemDialogComponent} from "../../dialogs/file-item-dialog/file-item-dialog.component";
 import {FileType} from "../../../utils/FileType";
 import {MatDialog} from "@angular/material/dialog";
+import {FileService} from "../../../service/file.service";
 
 @Component({
   selector: 'app-file-item',
@@ -11,16 +12,41 @@ import {MatDialog} from "@angular/material/dialog";
 })
 export class FileItemComponent implements OnInit {
 
-  // @Input() onFileItemClick?: (file: FileInfo) => void;
-
   @Input() file?: FileInfo;
+  thumbnail: any;
+  isThumbnailLoaded: boolean = false;
 
-  // @Input() getIconBySuffix?: (fileType: string) => (string);
 
-  constructor(private dialog:MatDialog) {
+  constructor(private dialog: MatDialog,
+              private fileService: FileService) {
   }
 
   ngOnInit(): void {
+    this.fileService.getThumbnail(this.file)
+      .subscribe({
+        next: data => {
+          if (data.size) {
+            console.log("NOT NULL FOR ", this.file?.id)
+            this.createImageFromBlob(data);
+            this.isThumbnailLoaded = true;
+          }
+        },
+        error: err => {
+          this.isThumbnailLoaded = false;
+          console.log(err);
+        }
+      })
+  }
+
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.thumbnail = reader.result;
+    }, false);
+
+    if (image) {
+      reader.readAsDataURL(image);
+    }
   }
 
   onFileItemClick(file: FileInfo) {
@@ -34,19 +60,19 @@ export class FileItemComponent implements OnInit {
       panelClass: 'file-item-dialog'
     });
 
-    matDialogRef.afterClosed()
-      .subscribe(result => {
-        switch (result) {
-          case 'download' :
-            // this.downloadFileById(file.id);
-            console.log("DOWNLOADING");
-            break;
-          case 'delete' :
-            // this.deleteFileById(file.id);
-            console.log("DELETING");
-            break;
-        }
-      });
+    // matDialogRef.afterClosed()
+    //   .subscribe(result => {
+    //     switch (result) {
+    //       case 'download' :
+    //         // this.downloadFileById(file.id);
+    //         console.log("DOWNLOADING");
+    //         break;
+    //       case 'delete' :
+    //         // this.deleteFileById(file.id);
+    //         console.log("DELETING");
+    //         break;
+    //     }
+    //   });
   }
 
 
@@ -67,4 +93,18 @@ export class FileItemComponent implements OnInit {
     }
   }
 
+  isIcon() {
+    return false;
+  }
+
+  hasThumbnail() {
+    switch (this.file?.fileType){
+      case FileType.PDF :
+      case FileType.FILE :
+      case FileType.ARCHIVE :
+      case FileType.VIDEO :
+        return false;
+    }
+    return true;
+  }
 }

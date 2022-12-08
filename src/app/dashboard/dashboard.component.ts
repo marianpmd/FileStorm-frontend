@@ -36,6 +36,7 @@ import {StorageRequestDialogComponent} from "../dialogs/storage-request-dialog/s
 import {NotificationService} from "../../service/notification.service";
 import {snackSuccessConfig} from "../../utils/UploadState";
 import {DirectoryWithParentInfo} from "../../datamodel/DirectoryWithParentInfo";
+import {FileChangeService} from "../../service/file-change.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -97,7 +98,8 @@ export class DashboardComponent implements OnInit {
               private cookieService: CookieService,
               private overlay: OverlayContainer,
               private authService: AuthService,
-              private notificationService: NotificationService
+              private notificationService: NotificationService,
+              private fileChangeService:FileChangeService
   ) {
     this.isLoading = true;
     this.mobileQuery = media.matchMedia('(max-width : 600px)');
@@ -111,6 +113,8 @@ export class DashboardComponent implements OnInit {
     this.initFileNotifySocket();
 
     this.initDarkToggle();
+
+    this.initFileChangeService();
 
     this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc, this.currentPaths);
 
@@ -233,13 +237,13 @@ export class DashboardComponent implements OnInit {
   }
 
   handleFileUpload(files: File[]) {
-    if (files.length > 20) {
-      this.snackBar.open("Only up to 6 files are allowed at once!", "Close", {
-        duration: 2000,
-        panelClass: ['mat-toolbar', 'mat-warn']
-      });
-      return;
-    }
+    // if (files.length > 20) {
+    //   this.snackBar.open("Only up to 6 files are allowed at once!", "Close", {
+    //     duration: 2000,
+    //     panelClass: ['mat-toolbar', 'mat-warn']
+    //   });
+    //   return;
+    // }
     if (this.fileUploadSubscription) {
       this.fileUploadSubscription.unsubscribe();
     }
@@ -620,5 +624,14 @@ export class DashboardComponent implements OnInit {
 
   onMonitorClick() {
     window.open(environment.baseUrl+'/monitoring')
+  }
+
+  private initFileChangeService() {
+    this.fileChangeService.getChangedFileId()
+      .subscribe(res=>{
+        console.log("FILE WAS DELETED")
+        this.files = this.files.filter(fileInfo => fileInfo.id !== res)
+        this.initUserInfo(this.userEmail);
+      })
   }
 }

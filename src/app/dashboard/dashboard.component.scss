@@ -65,14 +65,12 @@
   margin-bottom: 7px;
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   flex-direction: row;
   flex-wrap: wrap;
   row-gap: 31px;
   column-gap: 31px;
-  padding-left: 4%;
-
 }
 
 mat-list-item.add-button {

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpEventType, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpEventType, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
 import {environment} from "../environments/environment";
 import {Observable, tap} from "rxjs";
 import {FileInfo, FileInfoPaged} from "../datamodel/FileInfo";
@@ -14,6 +14,7 @@ const LOAD_BY_KEYWORD = environment.baseUrl + '/file/byKeyword';
 const GET_SYS_INFO = environment.baseUrl + '/user/systemInfo';
 const MAKE_PUBLIC = environment.baseUrl + '/file/makePublic';
 const MAKE_PRIVATE = environment.baseUrl + '/file/makePrivate';
+const GET_THUMBNAIL = environment.baseUrl + '/file/thumbnail';
 export const DOWNLOAD_ONE_PUBLIC = environment.baseUrl + '/file/public';
 
 @Injectable({
@@ -148,6 +149,15 @@ export class FileService {
       params : {
         id : fileId
       }
+    })
+  }
+
+  getThumbnail(file: FileInfo | undefined) {
+    return this.http.get(GET_THUMBNAIL,{
+      params : {
+        id : file!.id
+      },
+      responseType: "blob"
     })
   }
 }
