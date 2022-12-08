@@ -36,14 +36,14 @@ jobs:
 #      - name: Delete Existing Files
 #        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo rm -rf /var/www/mariancr.go.ro/html/*'
 
-      - name: Compress and Copy New Files to server
-        run : |
-          cd dist/file-storm-frontend/
-          sudo tar -czvf ../../file-storm-frontend.tar.gz ./
-          cd ..
-          cd ..
-          sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo chmod 777 /var/www/mariancr.go.ro/html'
-          sudo sshpass -p ${{ secrets.PASSWORD }} sudo scp -v -o StrictHostKeyChecking=no -r file-storm-frontend.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/mariancr.go.ro/html
+#      - name: Compress and Copy New Files to server
+#        run : |
+#          cd dist/file-storm-frontend/
+#          sudo tar -czvf ../../file-storm-frontend.tar.gz ./
+#          cd ..
+#          cd ..
+#          sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo chmod 777 /var/www/mariancr.go.ro/html'
+#          sudo sshpass -p ${{ secrets.PASSWORD }} sudo scp -v -o StrictHostKeyChecking=no -r file-storm-frontend.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/mariancr.go.ro/html
       - name: Uncompress new Files
         run : sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /var/www/mariancr.go.ro/html && sudo tar -xzvf file-storm-frontend.tar.gz && sudo rm file-storm-frontend.tar.gz'
       - name: Restart service
