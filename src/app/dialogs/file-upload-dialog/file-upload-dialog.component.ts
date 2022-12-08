@@ -20,7 +20,6 @@ export class FileUploadDialogComponent implements OnInit {
     this.allFiles = [...this.data];
   }
 
-
   computeFileSize(size: number) {
     return computeFileSize(size);
   }
