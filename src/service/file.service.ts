@@ -8,6 +8,7 @@ import {SystemInfo} from "../datamodel/SystemInfo";
 const UPLOAD_URL = environment.baseUrl + '/file/upload';
 const LOAD_ALL_URL = environment.baseUrl + '/file/all';
 export const DOWNLOAD_ONE_URL = environment.baseUrl + '/file/one';
+export const VIDEO_STREAM_URL = environment.baseUrl + '/file/one/video';
 const DELETE_ONE_URL = environment.baseUrl + '/file/delete/one';
 const CHECK_FILE_URL = environment.baseUrl + '/file/check';
 const LOAD_BY_KEYWORD = environment.baseUrl + '/file/byKeyword';

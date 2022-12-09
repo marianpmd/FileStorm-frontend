@@ -29,6 +29,8 @@ export class FileItemComponent implements OnInit {
             console.log("NOT NULL FOR ", this.file?.id)
             this.createImageFromBlob(data);
             this.isThumbnailLoaded = true;
+          }else {
+            this.isThumbnailLoaded = false;
           }
         },
         error: err => {
@@ -59,20 +61,6 @@ export class FileItemComponent implements OnInit {
       hasBackdrop: false,
       panelClass: 'file-item-dialog'
     });
-
-    // matDialogRef.afterClosed()
-    //   .subscribe(result => {
-    //     switch (result) {
-    //       case 'download' :
-    //         // this.downloadFileById(file.id);
-    //         console.log("DOWNLOADING");
-    //         break;
-    //       case 'delete' :
-    //         // this.deleteFileById(file.id);
-    //         console.log("DELETING");
-    //         break;
-    //     }
-    //   });
   }
 
 
@@ -106,5 +94,9 @@ export class FileItemComponent implements OnInit {
         return false;
     }
     return true;
+  }
+
+  isVideo() {
+    return this.file?.fileType === FileType.VIDEO;
   }
 }

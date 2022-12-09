@@ -17,6 +17,12 @@
     transform: scale(1.5);
     padding: 30px;
   }
+  .video-icon{
+    transform: scale(1.5);
+    padding: 30px;
+    position: absolute;
+    color: transparentize($primary, 0.4);
+  }
 
 
   mat-divider {
@@ -43,6 +49,7 @@
 
     .file-thumbnail {
       object-fit: contain;
+      max-height: 80px;
     }
   }
 }
@@ -51,7 +58,7 @@
   p.filename {
     max-width: 132px;
     max-height: 26px;
-    min-height: 20pxó;
+    min-height: 20px;
     color: $primary;
     font-weight: 600;
     text-overflow: ellipsis;

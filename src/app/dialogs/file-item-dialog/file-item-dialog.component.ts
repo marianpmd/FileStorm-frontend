@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {FileInfo} from "../../../datamodel/FileInfo";
 import {computeFileSize} from "../../../utils/Common";
 import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
-import {DOWNLOAD_ONE_URL, FileService} from "../../../service/file.service";
+import {DOWNLOAD_ONE_URL, FileService, VIDEO_STREAM_URL} from "../../../service/file.service";
 import {FileType} from "../../../utils/FileType";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {environment} from "../../../environments/environment";
@@ -39,11 +39,16 @@ export class FileItemDialogComponent implements OnInit {
     this.generatedLink = `${environment.linkGenURL}${this.data.id}`;
 
     if (this.isMedia) {
+      if (this.data.fileType === FileType.VIDEO){
+        this.sourceUrl = `${VIDEO_STREAM_URL}?fileId=${this.data.id}`;
+        console.log(this.sourceUrl + "src url")
+        this.isLoaded = true;
+        return;
+      }
       this.fileService.getByFileId(this.data.id)
         .subscribe({
           next: (response) => {
             this.source = response;
-            if (this.source) this.sourceUrl = this.sourceAsBlob(this.source);
             this.isLoaded = true;
           }
         });

@@ -3,6 +3,7 @@
   <div class="upper">
     <mat-spinner *ngIf="!isThumbnailLoaded && hasThumbnail()" class="image-load-spinner" mode="indeterminate" diameter="70" ></mat-spinner>
     <mat-icon *ngIf="!isThumbnailLoaded" class="icon" color="primary">{{getIconBySuffix(file!.fileType)}}</mat-icon>
+    <mat-icon *ngIf="isThumbnailLoaded && isVideo()" class="video-icon" >{{getIconBySuffix(file!.fileType)}}</mat-icon>
     <div class="thumbnail-container">
       <img *ngIf="thumbnail && isThumbnailLoaded" class="file-thumbnail" [src]="thumbnail!" alt="thumbnail">
     </div>
