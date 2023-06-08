@@ -38,9 +38,10 @@ jobs:
 
       - name: Compress and Copy New Files to server
         run : |
-          cd dist/file-storm-frontend/
-          sudo tar -czvf ../../file-storm-frontend.tar.gz /var/www/mariancr.go.ro/html
           sudo chmod 777 /var/www/mariancr.go.ro/html
+          sudo mv /home/marian/actions-runner-frontend/_work/FileStorm-frontend/FileStorm-frontend/file-storm-frontend.tar.gz /var/www/mariancr.go.ro/html
+          cd /var/www/mariancr.go.ro/html
+          sudo tar -xvf file-storm-frontend.tar.gz
       - name: Uncompress new Files
         run : cd /var/www/mariancr.go.ro/html && sudo tar -xzvf file-storm-frontend.tar.gz && sudo rm file-storm-frontend.tar.gz
       - name: Restart service
