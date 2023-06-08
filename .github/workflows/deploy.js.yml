@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     # using Ubuntu
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     defaults:
       run:
         working-directory: ./
@@ -34,17 +34,10 @@ jobs:
       - name: NPM build Angular Production
         run: ng build
       - name: Delete Existing Files
-        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo rm -rf /var/www/mariancr.go.ro/html/*'
-
-      - name: Compress and Copy New Files to server
+        run : sudo rm -rf /var/www/mariancr.go.ro/html/*
+      - name: Move files to web server folder
         run : |
-          cd dist/file-storm-frontend/
-          sudo tar -czvf ../../file-storm-frontend.tar.gz ./
-          cd ..
-          cd ..
-          sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo chmod 777 /var/www/mariancr.go.ro/html'
-          sudo sshpass -p ${{ secrets.PASSWORD }} sudo scp -v -o StrictHostKeyChecking=no -r file-storm-frontend.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/mariancr.go.ro/html
-      - name: Uncompress new Files
-        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd /var/www/mariancr.go.ro/html && sudo tar -xzvf file-storm-frontend.tar.gz && sudo rm file-storm-frontend.tar.gz'
+          sudo chmod 777 /var/www/mariancr.go.ro/html
+          mv /home/marian/actions-runner-frontend/_work/FileStorm-frontend/FileStorm-frontend/dist/file-storm-frontend/* /var/www/mariancr.go.ro/html/
       - name: Restart service
-        run : sudo sshpass -p ${{ secrets.PASSWORD }} -v sudo ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo systemctl restart nginx'
+        run : sudo systemctl restart nginx
