@@ -35,14 +35,9 @@ jobs:
         run: ng build
       - name: Delete Existing Files
         run : sudo rm -rf /var/www/mariancr.go.ro/html/*
-
-      - name: Compress and Copy New Files to server
+      - name: Move files to web server folder
         run : |
           sudo chmod 777 /var/www/mariancr.go.ro/html
-          sudo mv /home/marian/actions-runner-frontend/_work/FileStorm-frontend/FileStorm-frontend/file-storm-frontend.tar.gz /var/www/mariancr.go.ro/html
-          cd /var/www/mariancr.go.ro/html
-          sudo tar -xvf file-storm-frontend.tar.gz
-      - name: Uncompress new Files
-        run : cd /var/www/mariancr.go.ro/html && sudo tar -xzvf file-storm-frontend.tar.gz && sudo rm file-storm-frontend.tar.gz
+          mv /home/marian/actions-runner-frontend/_work/FileStorm-frontend/FileStorm-frontend/dist/file-storm-frontend/* /var/www/mariancr.go.ro/html/
       - name: Restart service
         run : sudo systemctl restart nginx
