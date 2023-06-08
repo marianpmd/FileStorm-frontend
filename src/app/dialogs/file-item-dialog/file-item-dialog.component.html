@@ -42,10 +42,10 @@
                   [render-text]="true"
                   [fit-to-page]="true"
                   [show-borders]="true"
-
+                  style="width: 100vw; height: 100vh;"
 
       ></pdf-viewer>
-<!--      style="width: 100vw; height: 100vh;"-->
+
       <div class="image-container"
            *ngIf="isLoaded && isMedia && isImage(data.fileType)">
         <img

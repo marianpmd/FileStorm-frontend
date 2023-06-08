@@ -28,7 +28,7 @@
     "lodash": "^4.17.21",
     "net": "^1.0.2",
     "ng-go-top-button": "^10.0.1",
-    "ng2-pdf-viewer": "^9.1.5",
+    "ng2-pdf-viewer": "^8.0.0",
     "ngx-cookie-service": "^13.1.2",
     "ngx-file-drop": "^13.0.0",
     "ngx-filesize": "^2.0.16",
