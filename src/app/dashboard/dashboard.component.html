@@ -115,15 +115,15 @@
         </div>
 
         <section class="directory-section mat-elevation-z10" *ngIf="!isLoading">
-          <div class="directory-div" *ngIf="directoriesObs | async as directories ">
-            <p *ngIf="directories.directories.length === 0 && !prevDir"
+          <div class="directory-div" *ngIf="directories">
+            <p *ngIf="directories.length === 0 && !parentDir"
                style="width: 100%; text-align:center">No directories created.</p>
-            <div matRipple class="dir-item" *ngIf="prevDir" (click)="onParentClick()">
+            <div matRipple class="dir-item" *ngIf="parentDir" (click)="onParentClick()">
               <mat-icon mat-list-icon>drive_file_move_rtl</mat-icon>
-              <div mat-line>{{prevDir.name}}</div>
+              <div mat-line>{{parentDir.name}}</div>
             </div>
 
-            <div class="dir-item" *ngFor="let dir of directories.directories">
+            <div class="dir-item" *ngFor="let dir of directories">
               <button mat-button (click)="onDirDeleteClick(dir)" class="dir-delete-button">
                 <mat-icon class="delete-button-icon">cancel</mat-icon>
               </button>

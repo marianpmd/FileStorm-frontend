@@ -53,10 +53,11 @@ export class DashboardComponent implements OnInit {
   loadingDialogRef!: MatDialogRef<UploadLoadingDialogComponent>;
 
   files: FileInfo[] = [];
-  prevDir!: DirectoryInfo | null;
+
+  parentDir: DirectoryInfo | null | undefined;
   directories: DirectoryInfo[] = [];
 
-  directoriesObs!: Observable<DirectoryWithParentInfo> ;
+  // directoriesObs!: Observable<DirectoryWithParentInfo> ;
 
   userEmail!: string;
   fileUploadSubscription!: Subscription;
@@ -79,7 +80,7 @@ export class DashboardComponent implements OnInit {
 
   @HostBinding('class') className = '';
 
-  private mobileQueryListener!: () => void;
+  private readonly mobileQueryListener!: () => void;
   toggleControl: FormControl = new FormControl(false);
   loggedUser!: UserInfo;
 
@@ -118,8 +119,13 @@ export class DashboardComponent implements OnInit {
 
     this.loadAllInitialFilesPaginated(this.sortBy, 0, 100, this.asc, this.currentPaths);
 
-    this.directoriesObs = this.directoryService.getAllDirectories(this.currentPaths);
-    // this.loadDirectoriesByPath();
+    this.directoryService.getAllDirectories(this.currentPaths)
+      .pipe(
+        tap(data => {
+          this.parentDir = data.parent;
+          this.directories = data.directories
+        })
+      ).subscribe();
 
     let jwt = this.cookieService.get("app-jwt");
 
@@ -463,12 +469,6 @@ export class DashboardComponent implements OnInit {
       left: 0
     });
   }
-
-  shouldNotShow() {
-    console.log("Is loading ? ", this.isLoading);
-    return this.isLoading;
-  }
-
   addDirectory() {
     this.dialog.open(DirectoryCreateDialogComponent)
       .afterClosed()
@@ -498,9 +498,9 @@ export class DashboardComponent implements OnInit {
 
         this.directories = response.directories
         if (response.parent !== null) {
-          this.prevDir = response.parent;
+          this.parentDir = response.parent;
         } else {
-          this.prevDir = null;
+          this.parentDir = null;
         }
       })
   }
